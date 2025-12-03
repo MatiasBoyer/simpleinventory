@@ -62,6 +62,7 @@ export const useInventoryStore = create(
       },
     }),
     {
+      name: 'shared-inv',
       storage: createJSONStorage(() => sessionStorage),
     }
   )
