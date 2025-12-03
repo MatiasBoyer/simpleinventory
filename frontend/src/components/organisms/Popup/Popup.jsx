@@ -1,4 +1,5 @@
 import Button from '@/components/atoms/Button';
+import Text from '@/components/atoms/Text';
 import CleanClassnames from '@/utils/functions/CleanClassnames';
 
 export default function Popup({ children, title, onAccept, onCancel }) {
@@ -11,7 +12,7 @@ export default function Popup({ children, title, onAccept, onCancel }) {
     >
       {title && (
         <div className="flex items-center justify-center bg-stone-400">
-          {title}
+          <Text>{title}</Text>
         </div>
       )}
       <div className="flex flex-col items-center justify-center">
