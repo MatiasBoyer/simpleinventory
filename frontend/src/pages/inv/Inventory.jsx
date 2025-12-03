@@ -3,6 +3,7 @@ import Button from '../../components/atoms/Button';
 import Text from '../../components/atoms/Text';
 import { useInventoryStore } from '@/utils/stores/useInventoryStore';
 import { AddPopup } from '@/components/organisms/Popup/PopupContainer';
+import { FaRegTrashAlt } from 'react-icons/fa';
 
 function ItemButton({ type, onClick }) {
   return (
@@ -31,8 +32,9 @@ function Entry({ item, store }) {
               onAccept: () => store.removeItem(item.id),
             });
           }}
+          replaceClassname="border-0 flex items-center w-full h-full cursor-pointer"
         >
-          T
+          <FaRegTrashAlt />
         </Button>
       </div>
       <div className="flex items-center">{item.label}</div>
@@ -88,19 +90,25 @@ function Inventory() {
               children: (
                 <>
                   <Text>Name</Text>
-                  <input className="border text-center" id="newItem-name" />
+                  <input
+                    tabIndex={1}
+                    className="border text-center"
+                    id="newItem-name"
+                  />
 
                   <Text>Initial quantity</Text>
                   <input
+                    tabIndex={2}
                     className="border text-center"
                     id="newItem-qty"
                     defaultValue={0}
+                    pattern="\d*"
                   />
                 </>
               ),
               title: 'Add new item',
               onAccept: (values) => {
-                const itemName = values['newItem-name'];
+                const itemName = values['newItem-name'].trim();
                 const itemQty = parseInt(values['newItem-qty']);
 
                 const displayErrorPopup = () => {
