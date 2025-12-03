@@ -32,7 +32,7 @@ export default function PopupDisplayer() {
 
   return (
     <div
-      className={`absolute inset-0 flex items-center justify-center transition-opacity duration-200 ${
+      className={`absolute inset-0 flex items-center justify-center transition-opacity backdrop-blur-sm duration-200 ${
         popups.length > 0 ? 'opacity-100 z-[9999]' : 'opacity-0 -z-[9999]'
       }`}
       style={{ pointerEvents: popups.length > 0 ? 'auto' : 'none' }}
