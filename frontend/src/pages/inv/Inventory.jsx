@@ -80,9 +80,9 @@ function Inventory() {
           <Entry item={item} store={store} key={item.id} />
         ))}
       </div>
-      <div className="flex justify-center items-end absolute bottom-1 left-0 right-0 opacity-50">
+      <div className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50">
         <Button
-          className="border-0"
+          replaceClassname="rounded-full bg-stone-300 w-8 h-8 cursor-pointer shadow-lg border"
           onClick={() => {
             AddPopup({
               children: (
@@ -124,7 +124,7 @@ function Inventory() {
             });
           }}
         >
-          add item
+          +
         </Button>
       </div>
     </div>
