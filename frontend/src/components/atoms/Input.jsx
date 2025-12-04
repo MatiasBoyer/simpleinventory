@@ -13,6 +13,7 @@ const Input = forwardRef(
       type = 'text',
       minLength = 0,
       maxLength = null,
+      id = null,
     },
     ref
   ) => {
@@ -54,6 +55,7 @@ const Input = forwardRef(
         minLength={minLength}
         maxLength={maxLength}
         disabled={disabled}
+        id={id}
       />
     );
   }
