@@ -1,6 +1,7 @@
 import environment from '#config/environment.js';
 import { betterAuth } from 'better-auth';
 import { Pool } from 'pg';
+import db from '#utils/db/db.js';
 
 export const auth = betterAuth({
   database: new Pool({
@@ -8,7 +9,8 @@ export const auth = betterAuth({
     password: environment.DATABASE.PASS,
     host: environment.DATABASE.HOST,
     port: environment.DATABASE.PORT,
-    database: 'auth',
+    database: environment.DATABASE.DBNAME,
+    options: '-c search_path=auth',
   }),
   emailAndPassword: {
     enabled: true,
