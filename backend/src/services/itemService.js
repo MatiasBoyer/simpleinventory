@@ -21,7 +21,7 @@ async function getItems(inventoryId, ownerId) {
   return result?.rows ?? [];
 }
 
-async function modifyItem(itemId, inventoryId, updates) {
+async function modifyItem(inventoryId, itemId, updates) {
   const sql = await db.read('items/ModifyItem.sql');
   const result = await db.run(sql, {
     itemId,
@@ -32,7 +32,7 @@ async function modifyItem(itemId, inventoryId, updates) {
   return result?.rowCount > 0 ?? false;
 }
 
-async function deleteItem(itemId, inventoryId) {
+async function deleteItem(inventoryId, itemId) {
   const sql = await db.read('items/RemoveItem.sql');
   const result = await db.run(sql, {
     itemId,
