@@ -76,7 +76,7 @@ function Inventory() {
   const store = useInventoryStore();
 
   return (
-    <div className="h-full bg-blue-100">
+    <div className="h-full">
       <div className="flex flex-col gap-1">
         {store.items.map((item) => (
           <Entry item={item} store={store} key={item.id} />

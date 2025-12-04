@@ -13,7 +13,7 @@ function App() {
         relative
         h-screen
         w-full md:w-[30%] md:max-w-[30%]
-        bg-stone-100
+        border
         `)}
       >
         <PopupDisplayer />
