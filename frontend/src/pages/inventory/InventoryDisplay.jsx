@@ -72,7 +72,7 @@ function Entry({ item, store }) {
   );
 }
 
-function Inventory() {
+function InventoryDisplay() {
   const store = useInventoryStore();
 
   return (
@@ -139,4 +139,4 @@ function Inventory() {
   );
 }
 
-export default Inventory;
+export default InventoryDisplay;

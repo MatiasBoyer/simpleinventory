@@ -2,7 +2,10 @@ import './App.css';
 import { Route, Routes } from 'react-router';
 import Main from '@pages/main/main';
 import CleanClassnames from './utils/functions/CleanClassnames';
-import Inventory from './pages/inv/Inventory';
+import InventoryList from './pages/inventory/InventoryList';
+import InventoryDisplay from './pages/inventory/InventoryDisplay';
+import NotFound from './pages/errors/NotFound';
+import Auth from './pages/auth/Auth';
 import PopupDisplayer from './components/organisms/Popup/PopupDisplayer';
 
 function App() {
@@ -19,7 +22,12 @@ function App() {
         <PopupDisplayer />
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/inventory" element={<Inventory />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/inventory">
+            <Route path="/inventory/list" element={<InventoryList />} />
+            <Route path="/inventory/display" element={<InventoryDisplay />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>
