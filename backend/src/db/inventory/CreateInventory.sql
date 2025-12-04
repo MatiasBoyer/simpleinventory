@@ -1,3 +1,3 @@
-INSERT INTO inventory_hdr (name, username)
-VALUES (:name, :user)
+INSERT INTO inventory_hdr (inventory_name, ownerid)
+VALUES (:inventory_name, :ownerid)
 RETURNING id
