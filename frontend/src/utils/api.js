@@ -50,4 +50,14 @@ const items = {
   },
 };
 
-export default { inventory, items };
+const ai = {
+  analyzeImage: async (base64) => {
+    return {
+      success: true,
+      message: null,
+      data: [],
+    };
+  },
+};
+
+export default { inventory, items, ai };
