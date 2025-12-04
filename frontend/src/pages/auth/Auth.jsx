@@ -52,6 +52,7 @@ function Register() {
       }
 
       console.info({ data });
+      navigate(loginCallbackUrl);
     } catch (err) {
       console.error({ err });
       setErrorMessage(err.message || 'Login failed');
@@ -74,6 +75,7 @@ function Register() {
       }
 
       console.info({ data });
+      navigate(loginCallbackUrl);
     } catch (err) {
       console.error({ err });
       setErrorMessage(err.message || 'Registration failed');
