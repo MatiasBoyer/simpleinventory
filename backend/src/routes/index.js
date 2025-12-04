@@ -7,8 +7,8 @@ import { auth } from '#utils/auth.js';
 const router = express.Router();
 
 router.use(healthRouter);
-router.use(inventoryRouter);
 router.use('/ai', aiRouter);
+router.use('/inventory', inventoryRouter);
 router.use('/auth', toNodeHandler(auth));
 
 export default router;
