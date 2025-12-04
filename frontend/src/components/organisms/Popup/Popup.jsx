@@ -2,7 +2,13 @@ import Button from '@/components/atoms/Button';
 import Text from '@/components/atoms/Text';
 import CleanClassnames from '@/utils/functions/CleanClassnames';
 
-export default function Popup({ children, title, onAccept, onCancel }) {
+export default function Popup({
+  children,
+  title,
+  onAccept,
+  onCancel,
+  showCancel,
+}) {
   return (
     <div
       className={CleanClassnames(`
@@ -26,7 +32,7 @@ export default function Popup({ children, title, onAccept, onCancel }) {
         >
           OK
         </Button>
-        {onCancel && (
+        {onCancel && showCancel && (
           <Button
             onClick={() => {
               onCancel?.();

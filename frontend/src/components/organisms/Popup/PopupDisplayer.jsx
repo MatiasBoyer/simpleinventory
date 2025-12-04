@@ -6,15 +6,12 @@ export default function PopupDisplayer() {
 
   // Handler for popup:add event
   const handlePopup = useCallback((e) => {
-    const { children, title, onAccept, onCancel } = e.detail;
+    const details = e.detail;
     setPopups((prev) => [
       ...prev,
       {
+        ...details,
         id: Date.now() + Math.random(),
-        children,
-        title,
-        onAccept,
-        onCancel,
       },
     ]);
   }, []);
@@ -69,6 +66,7 @@ export default function PopupDisplayer() {
             if (typeof popup.onCancel === 'function') popup.onCancel(values);
             closePopup(popup.id);
           }}
+          showCancel={popup.showCancel ?? true}
         >
           <div data-popup-id={popup.id}>{popup.children}</div>
         </Popup>
