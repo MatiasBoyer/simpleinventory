@@ -11,6 +11,7 @@ const config = {
     PASS: process.env.DB_PASS,
     DBNAME: process.env.DB_NAME,
   },
+  CORS: process.env.CORS.split('|') ?? ['http://localhost:3000'],
 };
 
 if (!config.GEMINI_API_KEY) {
