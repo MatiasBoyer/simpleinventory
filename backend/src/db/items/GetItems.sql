@@ -1,4 +1,5 @@
 SELECT
+    ctn.id,
     ctn.item_text,
     ctn.quantity
 FROM inventory_ctn ctn

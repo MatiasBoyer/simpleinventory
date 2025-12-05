@@ -67,7 +67,10 @@ async function modifyItem(req, res, next) {
       paramsValue.itemId,
       bodyValue
     );
-    res.status(result ? 200 : 400).send();
+
+    const data = await service.getItems(paramsValue.inventoryId, req.user.id);
+
+    res.status(result ? 200 : 400).json(data);
   } catch (err) {
     next(err);
   }

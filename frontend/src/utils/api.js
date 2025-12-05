@@ -31,7 +31,7 @@ const inventory = {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error(await res.text());
-      return res.body;
+      return res.text();
     }),
   getList: async () =>
     apiWrap(async () => {
@@ -47,41 +47,47 @@ const items = {
   getList: async (inventoryId) =>
     apiWrap(async () => {
       const res = await fetch(
-        `${environment.API_BASEURL}/items?inventoryId=${inventoryId}`,
+        `${environment.API_BASEURL}/inventory/${inventoryId}/items`,
         { headers: { ...baseHeaders } }
       );
       if (!res.ok) throw new Error(await res.text());
       return res.json();
     }),
-  addItem: async (inventoryId, itemName, itemQuantity) =>
+  addItem: async (inventoryId, item_text, quantity) =>
     apiWrap(async () => {
-      const res = await fetch(`${environment.API_BASEURL}/items`, {
-        method: 'POST',
-        headers: { ...baseHeaders, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ inventoryId, itemName, itemQuantity }),
-      });
+      const res = await fetch(
+        `${environment.API_BASEURL}/inventory/${inventoryId}/items`,
+        {
+          method: 'POST',
+          headers: { ...baseHeaders, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ item_text, quantity }),
+        }
+      );
       if (!res.ok) throw new Error(await res.text());
       return res.json();
     }),
   removeItem: async (inventoryId, itemId) =>
     apiWrap(async () => {
       const res = await fetch(
-        `${environment.API_BASEURL}/items/${itemId}?inventoryId=${inventoryId}`,
+        `${environment.API_BASEURL}/inventory/${inventoryId}/items/${itemId}`,
         {
           headers: { ...baseHeaders },
           method: 'DELETE',
         }
       );
       if (!res.ok) throw new Error(await res.text());
-      return res.json();
+      return res.text();
     }),
   modifyQuantity: async (inventoryId, itemId, itemQuantity) =>
     apiWrap(async () => {
-      const res = await fetch(`${environment.API_BASEURL}/items/${itemId}`, {
-        method: 'PUT',
-        headers: { ...baseHeaders, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ inventoryId, itemQuantity }),
-      });
+      const res = await fetch(
+        `${environment.API_BASEURL}/inventory/${inventoryId}/items/${itemId}`,
+        {
+          method: 'PATCH',
+          headers: { ...baseHeaders, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ quantity: itemQuantity }),
+        }
+      );
       if (!res.ok) throw new Error(await res.text());
       return res.json();
     }),

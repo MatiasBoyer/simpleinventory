@@ -11,7 +11,7 @@ const updateSchema = Joi.object({
 
 const itemSchema = Joi.object({
   item_text: Joi.string().required(),
-  quantity: Joi.number().optional().default(0),
+  quantity: Joi.number().optional().default(0).min(0).max(999),
 });
 
 const addItemSchema = Joi.alternatives()
@@ -20,7 +20,7 @@ const addItemSchema = Joi.alternatives()
 
 const modifyItemsSchema = Joi.object({
   item_text: Joi.string().optional(),
-  quantity: Joi.number().optional(),
+  quantity: Joi.number().optional().default(0).min(0).max(999),
 }).or('quantity', 'item_text');
 
 export default {
