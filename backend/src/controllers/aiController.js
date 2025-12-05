@@ -1,5 +1,6 @@
 import aiSchema from '#schemas/aiSchema.js';
 import compress from '#utils/imageCompress.js';
+import aiService from '#services/ai/aiService.js';
 import { analyzeImage } from '#services/ai/imageAnalysisService.js';
 
 async function getImageAnalysis(req, res, next) {
@@ -21,4 +22,13 @@ async function getImageAnalysis(req, res, next) {
   }
 }
 
-export { getImageAnalysis };
+async function getUses(req, res, next) {
+  try {
+    const uses = await aiService.getUses(req.user.id);
+    res.status(200).json({ usesLeft: uses });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export default { getImageAnalysis, getUses };

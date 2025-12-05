@@ -1,7 +1,17 @@
 import express from 'express';
-import { getImageAnalysis } from '#controllers/aiController.js';
-const aiRouter = express.Router();
+// services
+import service from '#controllers/aiController.js';
 
-aiRouter.post('/imageAnalysis', getImageAnalysis);
+// mw
+import authenticationHandler from '#middlewares/authenticationHandler.js';
+import aiUsageHandler from '#middlewares/aiUsageHandler.js';
 
-export default aiRouter;
+const router = express.Router();
+
+router.use(authenticationHandler);
+router.get('/uses', service.getUses);
+
+router.use(aiUsageHandler);
+router.post('/imageAnalysis', service.getImageAnalysis);
+
+export default router;

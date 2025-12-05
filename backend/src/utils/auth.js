@@ -19,4 +19,19 @@ export const auth = betterAuth({
   trustedOrigins: environment.CORS,
   basePath: '/auth',
   plugins: [bearer()],
+  user: {
+    additionalFields: {
+      language: {
+        type: 'string',
+        required: false,
+        defaultValue: 'english',
+      },
+      ai_uses: {
+        type: 'number',
+        required: false,
+        defaultValue: 3,
+        input: false,
+      },
+    },
+  },
 });

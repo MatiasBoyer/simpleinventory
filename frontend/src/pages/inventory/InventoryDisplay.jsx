@@ -6,7 +6,9 @@ import { FaRegTrashAlt } from 'react-icons/fa';
 import { useNavigate, useSearchParams } from 'react-router';
 import { useEffect, useState } from 'react';
 import { AiOutlineLoading } from 'react-icons/ai';
+import { PiStarFour } from 'react-icons/pi';
 import api from '@/utils/api';
+import { IoMdAdd } from 'react-icons/io';
 
 function ItemButton({ type, onClick }) {
   return (
@@ -203,9 +205,9 @@ function InventoryDisplay() {
           />
         ))}
       </div>
-      <div className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50">
+      <div className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50 gap-3">
         <Button
-          replaceClassname="rounded-full bg-stone-300 w-8 h-8 cursor-pointer shadow-lg border"
+          replaceClassname="rounded-full bg-stone-300 w-8 h-8 cursor-pointer shadow-lg border flex items-center justify-center"
           onClick={() => {
             AddPopup({
               children: (
@@ -254,7 +256,10 @@ function InventoryDisplay() {
             });
           }}
         >
-          +
+          <IoMdAdd />
+        </Button>
+        <Button replaceClassname="rounded-full bg-stone-300 w-8 h-8 cursor-pointer shadow-lg border flex items-center justify-center">
+          <PiStarFour />
         </Button>
       </div>
     </div>
