@@ -1,6 +1,6 @@
 import aiSchema from '#schemas/aiSchema.js';
 import compress from '#utils/imageCompress.js';
-import { analyzeImage } from '#services/imageAnalysisService.js';
+import { analyzeImage } from '#services/ai/imageAnalysisService.js';
 
 async function getImageAnalysis(req, res, next) {
   try {
