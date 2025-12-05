@@ -100,4 +100,4 @@ async function deleteItem(req, res, next) {
   }
 }
 
-export { addItem, getItems, modifyItem, deleteItem };
+export default { addItem, getItems, modifyItem, deleteItem };

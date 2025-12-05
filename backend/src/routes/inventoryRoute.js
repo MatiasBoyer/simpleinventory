@@ -1,16 +1,11 @@
 import express from 'express';
-import { createInventory } from '#controllers/inventoryController.js';
-const inventoryRouter = express.Router();
+import inventoryController from '#controllers/inventoryController.js';
+import itemsController from '#controllers/itemsController.js';
+const router = express.Router();
 
-inventoryRouter.post('/new', createInventory); // create
-inventoryRouter.delete('/:inventoryId', undefined); // delete
-inventoryRouter.get('/list', undefined); // getList
-inventoryRouter.patch('/:inventoryId', undefined); // getList
+router.post('/new', inventoryController.createInventory); // create
+router.delete('/:inventoryId', inventoryController.deleteInventory); // delete
+router.get('/list', inventoryController.getInventories); // getList
+router.patch('/:inventoryId', inventoryController.updateInventory); // getList
 
-/*
-inventoryRouter.get('/:inventoryId/items', undefined); // item list
-inventoryRouter.post('/:inventoryId/items', undefined); // create item
-inventoryRouter.delete('/:inventoryId/items/:itemId', undefined); // delete item
-inventoryRouter.patch('/:inventoryId/items/:itemId', undefined); // modify item quantity
-*/
-export default inventoryRouter;
+export default router;

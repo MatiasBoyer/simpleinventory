@@ -58,4 +58,9 @@ async function updateInventory(req, res, next) {
   }
 }
 
-export { createInventory, deleteInventory, updateInventory, getInventories };
+export default {
+  createInventory,
+  deleteInventory,
+  updateInventory,
+  getInventories,
+};
