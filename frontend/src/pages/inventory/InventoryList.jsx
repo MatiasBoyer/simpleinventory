@@ -126,6 +126,7 @@ function InventoryList() {
                   </>
                 ),
                 showCancel: false,
+                onAccept: () => setIsLoading(true),
               });
             } else {
               AddPopup({
@@ -173,7 +174,8 @@ function InventoryList() {
           <Entry
             id={item.id}
             key={item.id}
-            label={item.label}
+            label={item.inventory_name}
+            quantity={item.item_count}
             onDelete={() => onDelete(item.id)}
           />
         ))}

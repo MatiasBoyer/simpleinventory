@@ -1,63 +1,103 @@
+import environment from './environment';
+
+async function apiWrap(fn) {
+  try {
+    const data = await fn();
+    return { success: true, data, message: null };
+  } catch (err) {
+    return { success: false, data: null, message: err?.message || String(err) };
+  }
+}
+
+const baseHeaders = {
+  Authorization: `Bearer ${localStorage.getItem('bearer_token')}`,
+};
+
 const inventory = {
-  create: async (name) => {
-    return { success: true, message: 'test', data: { id: 0 } };
-  },
-  delete: async (id) => {
-    return { success: true, message: 'test' };
-  },
-  getList: async () => {
-    return {
-      success: true,
-      message: null,
-      data: [
-        {
-          id: 0,
-          label: 'test',
-        },
-      ],
-    };
-  },
+  create: async (inventory_name) =>
+    apiWrap(async () => {
+      const res = await fetch(`${environment.API_BASEURL}/inventory/new`, {
+        method: 'POST',
+        headers: { ...baseHeaders, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inventory_name }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }),
+  delete: async (id) =>
+    apiWrap(async () => {
+      const res = await fetch(`${environment.API_BASEURL}/inventory/${id}`, {
+        headers: { ...baseHeaders },
+        method: 'DELETE',
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.body;
+    }),
+  getList: async () =>
+    apiWrap(async () => {
+      const res = await fetch(`${environment.API_BASEURL}/inventory/list`, {
+        headers: { ...baseHeaders },
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }),
 };
 
 const items = {
-  getList: async (inventoryId) => {
-    return {
-      success: true,
-      message: null,
-      data: [],
-    };
-  },
-  addItem: async (inventoryId, itemName, itemQuantity) => {
-    return {
-      success: true,
-      message: null,
-      data: [],
-    };
-  },
-  removeItem: async (inventoryId, itemId) => {
-    return {
-      success: true,
-      message: null,
-      data: [],
-    };
-  },
-  modifyQuantity: async (inventoryId, itemId) => {
-    return {
-      success: true,
-      message: null,
-      data: [],
-    };
-  },
+  getList: async (inventoryId) =>
+    apiWrap(async () => {
+      const res = await fetch(
+        `${environment.API_BASEURL}/items?inventoryId=${inventoryId}`,
+        { headers: { ...baseHeaders } }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }),
+  addItem: async (inventoryId, itemName, itemQuantity) =>
+    apiWrap(async () => {
+      const res = await fetch(`${environment.API_BASEURL}/items`, {
+        method: 'POST',
+        headers: { ...baseHeaders, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inventoryId, itemName, itemQuantity }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }),
+  removeItem: async (inventoryId, itemId) =>
+    apiWrap(async () => {
+      const res = await fetch(
+        `${environment.API_BASEURL}/items/${itemId}?inventoryId=${inventoryId}`,
+        {
+          headers: { ...baseHeaders },
+          method: 'DELETE',
+        }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }),
+  modifyQuantity: async (inventoryId, itemId, itemQuantity) =>
+    apiWrap(async () => {
+      const res = await fetch(`${environment.API_BASEURL}/items/${itemId}`, {
+        method: 'PUT',
+        headers: { ...baseHeaders, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inventoryId, itemQuantity }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }),
 };
 
 const ai = {
-  analyzeImage: async (base64) => {
-    return {
-      success: true,
-      message: null,
-      data: [],
-    };
-  },
+  analyzeImage: async (base64) =>
+    apiWrap(async () => {
+      const res = await fetch(`${environment.API_BASEURL}/ai/analyze`, {
+        method: 'POST',
+        headers: { ...baseHeaders, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ base64 }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    }),
 };
 
 export default { inventory, items, ai };
