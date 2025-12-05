@@ -16,7 +16,7 @@ async function getImageAnalysis(req, res, next) {
 
     const aiResponse = await analyzeImage(
       compressed,
-      value.language,
+      value.language ?? req.user.language,
       value.currentItemList ?? []
     );
 
