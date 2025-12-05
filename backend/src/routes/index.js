@@ -10,7 +10,7 @@ const router = express.Router();
 router.use(healthRouter);
 router.use('/ai', aiRouter);
 router.use('/inventory', inventoryRouter);
-router.use('/inventory/:inventoryId', itemsRouter);
+router.use('/inventory', itemsRouter);
 router.use('/auth', toNodeHandler(auth));
 
 export default router;

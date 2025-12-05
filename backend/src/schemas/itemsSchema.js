@@ -9,14 +9,18 @@ const updateSchema = Joi.object({
   itemId: Joi.number().required(),
 });
 
-const addItemSchema = Joi.object({
+const itemSchema = Joi.object({
   item_text: Joi.string().required(),
   quantity: Joi.number().optional().default(0),
 });
 
+const addItemSchema = Joi.alternatives()
+  .try(itemSchema, Joi.array().items(itemSchema))
+  .custom((value) => (Array.isArray(value) ? value : [value]));
+
 const modifyItemsSchema = Joi.object({
-  quantity: Joi.string().optional(),
   item_text: Joi.string().optional(),
+  quantity: Joi.number().optional(),
 }).or('quantity', 'item_text');
 
 export default {

@@ -4,3 +4,4 @@ SELECT
 FROM inventory_ctn ctn
 INNER JOIN inventory_hdr hdr ON hdr.id = ctn.hdr_id
 WHERE hdr.ownerid = :ownerId
+AND hdr.id = :inventoryId

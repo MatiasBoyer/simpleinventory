@@ -1,14 +1,21 @@
 import db from '#utils/db/db.js';
 
-async function addItem(inventoryId, item_text, quantity) {
+async function addItems(inventoryId, items) {
   const sql = await db.read('items/AddItem.sql');
-  const result = await db.run(sql, {
-    inventoryId,
-    item_text,
-    quantity,
-  });
 
-  return result?.rows[0]?.id ?? -1;
+  return db.run(async (client) => {
+    const results = [];
+
+    for (const item of items) {
+      const result = await db.run(sql, {
+        inventoryId,
+        ...item,
+      });
+      results.push(result.rows[0]);
+    }
+
+    return results;
+  });
 }
 
 async function getItems(inventoryId, ownerId) {
@@ -21,20 +28,26 @@ async function getItems(inventoryId, ownerId) {
   return result?.rows ?? [];
 }
 
-async function modifyItem(inventoryId, itemId, updates) {
+async function modifyItem(ownerId, inventoryId, itemId, updates) {
   const sql = await db.read('items/ModifyItem.sql');
   const result = await db.run(sql, {
-    itemId,
+    ownerId,
     inventoryId,
+    itemId,
+
+    quantity: null,
+    item_text: null,
+
     ...updates,
   });
 
   return result?.rowCount > 0 ?? false;
 }
 
-async function deleteItem(inventoryId, itemId) {
+async function deleteItem(ownerId, inventoryId, itemId) {
   const sql = await db.read('items/RemoveItem.sql');
   const result = await db.run(sql, {
+    ownerId,
     itemId,
     inventoryId,
   });
@@ -43,7 +56,7 @@ async function deleteItem(inventoryId, itemId) {
 }
 
 export default {
-  addItem,
+  addItems,
   getItems,
   modifyItem,
   deleteItem,
