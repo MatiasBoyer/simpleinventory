@@ -1,6 +1,6 @@
 import db from '#utils/db/db.js';
 
-async function createInventory(inventory_name, user) {
+async function createInventory(inventory_name, ownerId) {
   const sql = await db.read('inventory/CreateInventory.sql');
   const result = await db.run(sql, {
     inventory_name,

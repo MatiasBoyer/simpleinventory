@@ -1,12 +1,11 @@
 import Joi from 'joi';
 
-const createInventorySchema = Joi.object({
-  name: Joi.string().required().min(3).max(20),
-  user: Joi.string().required().min(3).max(20),
+const paramsSchema = Joi.object({
+  inventoryId: Joi.number().required(),
 });
 
-const deleteInventorySchema = Joi.object({
-  inventoryId: Joi.number().required(),
+const createInventorySchema = Joi.object({
+  inventoryName: Joi.string().required().min(3).max(20),
 });
 
 const updateInventorySchema = Joi.object({
@@ -16,4 +15,5 @@ const updateInventorySchema = Joi.object({
 export default {
   createInventorySchema,
   updateInventorySchema,
+  paramsSchema,
 };

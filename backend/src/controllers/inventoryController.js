@@ -10,8 +10,11 @@ async function createInventory(req, res, next) {
       throw err;
     }
 
-    const result = await service.createInventory(value.name, value.user);
-    res.status(200).json({ id: result });
+    const result = await service.createInventory(
+      value.inventoryName,
+      req.user.id
+    );
+    res.status(201).json({ id: result });
   } catch (err) {
     next(err);
   }
@@ -19,15 +22,19 @@ async function createInventory(req, res, next) {
 
 async function deleteInventory(req, res, next) {
   try {
-    const { error, value } = schemas.deleteInventorySchema.validate(req.params);
+    const { error, value } = schemas.paramsSchema.validate(req.params);
     if (error) {
       const err = new Error(error);
       err.status = 400;
       throw err;
     }
 
-    const result = await service.deleteInventory(value.inventoryId, undefined);
-    res.status(result ? 200 : 404);
+    const result = await service.deleteInventory(
+      value.inventoryId,
+      req.user.id
+    );
+
+    res.status(result ? 204 : 404).send();
   } catch (err) {
     next(err);
   }
@@ -35,7 +42,7 @@ async function deleteInventory(req, res, next) {
 
 async function getInventories(req, res, next) {
   try {
-    const result = await service.getInventories(undefined);
+    const result = await service.getInventories(req.user.id);
     res.status(200).json(result);
   } catch (err) {
     next(err);
@@ -44,6 +51,14 @@ async function getInventories(req, res, next) {
 
 async function updateInventory(req, res, next) {
   try {
+    const { error: paramsError, value: paramsValue } =
+      schemas.paramsSchema.validate(req.params);
+    if (paramsError) {
+      const err = new Error(paramsError);
+      err.status = 400;
+      throw err;
+    }
+
     const { error, value } = schemas.updateInventorySchema.validate(req.body);
     if (error) {
       const err = new Error(error);
@@ -51,8 +66,12 @@ async function updateInventory(req, res, next) {
       throw err;
     }
 
-    const result = await service.updateInventory(undefined, undefined, value);
-    res.status(result ? 200 : 404);
+    const result = await service.updateInventory(
+      paramsValue.inventoryId,
+      req.user.id,
+      value
+    );
+    res.status(result ? 200 : 404).send();
   } catch (err) {
     next(err);
   }

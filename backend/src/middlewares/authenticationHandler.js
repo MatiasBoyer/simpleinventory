@@ -6,8 +6,6 @@ import { auth } from '#utils/auth.js';
  * @param {import('express').NextFunction} next
  */
 async function authenticationHandler(req, res, next) {
-  console.info('authenticated request');
-
   const session = await auth.api.getSession({
     headers: req.headers,
   });
