@@ -12,8 +12,8 @@ import { GetImageAnalysisPrompt } from '#utils/promptProvider.js';
  * - `error` {string|null}: Contains the error message if the analysis failed, otherwise `null`.
  * - `data` {Object|Array}: The parsed JSON response from the AI client if successful, otherwise an empty array.
  */
-async function analyzeImage(base64, language = 'english') {
-  const prompt = GetImageAnalysisPrompt(language);
+async function analyzeImage(base64, language = 'english', currentList = []) {
+  const prompt = GetImageAnalysisPrompt(language, currentList);
   const aiClient = GetAIClient();
 
   let mimeType = 'image/png';

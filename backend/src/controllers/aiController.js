@@ -14,7 +14,11 @@ async function getImageAnalysis(req, res, next) {
 
     const compressed = await compress(value.imageBase64);
 
-    const aiResponse = await analyzeImage(compressed, value.language);
+    const aiResponse = await analyzeImage(
+      compressed,
+      value.language,
+      value.currentItemList ?? []
+    );
 
     res.status(200).json(aiResponse);
   } catch (err) {
