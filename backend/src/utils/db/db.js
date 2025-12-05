@@ -45,13 +45,24 @@ class Database {
           const placeholder = `:${key}`;
           const pgPlaceholder = `$${index + 1}`;
           sql = sql.replaceAll(placeholder, pgPlaceholder);
-          values.push(params[key]);
+          values.push(Database._autocast(params[key]));
         });
       } else {
-        values = params;
+        values = Array.isArray(params)
+          ? params.map(Database._autocast)
+          : [Database._autocast(params)];
       }
 
       const result = await client.query(sql, values);
+      if (result && Array.isArray(result.rows)) {
+        result.rows = result.rows.map((row) => {
+          const casted = {};
+          for (const key in row) {
+            casted[key] = Database._autocast(row[key]);
+          }
+          return casted;
+        });
+      }
       return result;
     } catch (err) {
       await client.query('ROLLBACK').catch(() => {});
@@ -60,6 +71,26 @@ class Database {
     } finally {
       client.release();
     }
+  }
+
+  /**
+   * Autocast value to appropriate type for pg
+   * @param {any} value
+   * @returns {any}
+   */
+  static _autocast(value) {
+    if (value === null || value === undefined) return null;
+    if (typeof value === 'string') {
+      // Try to cast to number
+      if (!isNaN(value) && value.trim() !== '') return Number(value);
+      // Boolean string
+      if (value.toLowerCase() === 'true') return true;
+      if (value.toLowerCase() === 'false') return false;
+      // Null string
+      if (value.toLowerCase() === 'null') return null;
+      return value;
+    }
+    return value;
   }
 
   /**
