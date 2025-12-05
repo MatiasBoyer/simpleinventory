@@ -5,7 +5,7 @@ const paramsSchema = Joi.object({
 });
 
 const createInventorySchema = Joi.object({
-  inventoryName: Joi.string().required().min(3).max(20),
+  inventory_name: Joi.string().required().min(3).max(20),
 });
 
 const updateInventorySchema = Joi.object({

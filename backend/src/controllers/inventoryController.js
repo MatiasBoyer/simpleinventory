@@ -11,7 +11,7 @@ async function createInventory(req, res, next) {
     }
 
     const result = await service.createInventory(
-      value.inventoryName,
+      value.inventory_name,
       req.user.id
     );
     res.status(201).json({ id: result });
