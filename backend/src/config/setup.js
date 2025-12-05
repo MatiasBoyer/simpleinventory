@@ -14,6 +14,8 @@ function setup(app) {
     cors({
       origin: environment.CORS,
       credentials: true,
+      methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
     })
   );
   app.use(json({ limit: '10mb' }));
