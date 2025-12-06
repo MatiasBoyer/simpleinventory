@@ -2,7 +2,7 @@ import environment from '#config/environment.js';
 import { betterAuth } from 'better-auth';
 import { bearer } from 'better-auth/plugins';
 import { Pool } from 'pg';
-//import db from '#utils/db/db.js';
+import corsConfig from '#config/cors.js';
 
 export const auth = betterAuth({
   database: new Pool({
@@ -16,7 +16,7 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
-  trustedOrigins: environment.CORS,
+  //trustedOrigins: environment.CORS,
   basePath: '/auth',
   plugins: [bearer()],
   user: {
