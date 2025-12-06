@@ -18,11 +18,15 @@ const addItemSchema = Joi.alternatives()
   .try(itemSchema, Joi.array().items(itemSchema))
   .custom((value) => (Array.isArray(value) ? value : [value]));
 
-const modifyItemsSchema = Joi.object({
+const modifyItem = {
   id: Joi.number(),
   item_text: Joi.string(),
   quantity: Joi.number().min(0).max(999),
-}).custom((value, helpers) => {
+};
+
+const modifyItemSchema = Joi.object(modifyItem);
+
+const modifyItemsSchema = Joi.object(modifyItem).custom((value, helpers) => {
   const { id, item_text, quantity } = value;
 
   // If quantity is present → require id or item_text
@@ -46,5 +50,6 @@ export default {
   creationSchema,
   updateSchema,
   addItemSchema,
+  modifyItemSchema,
   modifyItemsSchema,
 };

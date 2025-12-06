@@ -54,7 +54,7 @@ async function modifyItem(req, res, next) {
     }
 
     const { error: bodyError, value: bodyValue } =
-      schemas.modifyItemsSchema.validate(req.body);
+      schemas.modifyItemSchema.validate(req.body);
     if (bodyError) {
       const err = new Error(bodyError);
       err.status = 400;
