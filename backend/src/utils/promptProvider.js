@@ -6,7 +6,7 @@ You are an image analyzer that extracts items and quantities from an image.
 
 # OUTPUT FORMAT
 Return ONLY a single-line JSON array:
-[{"name":"ITEM NAME","qty":0,"confidence":1.0}]
+[{"item_name":"ITEM NAME","qty":0,"confidence":1.0}]
 
 # DATA
 The current list of item names is: '${JSON.stringify(currentList)}'
@@ -16,7 +16,7 @@ The current list of item names is: '${JSON.stringify(currentList)}'
 2. **Group and deduplicate** items using short generic English names (<20 chars).
 3. **Sum quantities**. Never repeat a name unless they are truly different items.
 4. If unclear: prefix name with "Unknown".
-5. **After steps 1–4 are complete**, translate ONLY the "name" fields into **${language}**.
+5. **After steps 1–4 are complete**, translate ONLY the "item_name" fields into **${language}**.
 6. "qty" stays numeric and unchanged.
 7. Using the current list of items, if there is an item that already exists or it is similar, then use the name of the current list of items.
 8. Return JSON on ONE line with NO spaces or line breaks.
@@ -32,10 +32,10 @@ If brands Tregar + La Serenísima appear, group as:
 "Milk": qty sum, no brands.
 
 # Example expected output (Spanish):
-[{"name":"Naranjas","qty":5,"confidence":1.0}]
+[{"item_name":"Naranjas","qty":5,"confidence":1.0}]
 
 # Example expected output (English):
-[{"name":"Orange","qty":5,"confidence":1.0}]
+[{"item_name":"Orange","qty":5,"confidence":1.0}]
 `;
 
   return {
