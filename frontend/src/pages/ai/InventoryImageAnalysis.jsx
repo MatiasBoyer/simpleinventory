@@ -130,9 +130,12 @@ function AnalyzedList({ inventoryId, aiResult, navigate }) {
       onAccept: async () => {
         setIsLoading(true);
 
-        const result = await api.inventory.update(inventoryId, {
-          items: finalResult,
-        });
+        const result = await api.inventory.updateItems(
+          inventoryId,
+          finalResult
+        );
+
+        console.info('update result', result);
 
         const redirect = () => navigate(`/inventory/display?id=${inventoryId}`);
 
@@ -277,13 +280,16 @@ function InventoryImageAnalysis() {
 
     const result = await api.ai.analyzeImage(images, inventoryId);
 
-    console.info(result);
+    console.info('result from AI:', { result, data: result.data[0] });
 
-    if (result.success) {
+    if (result.success && result?.data) {
       result.data =
-        result.data?.data?.map(
-          (m) => (m.fakeId = generateRandomDigitString(10))
-        ) ?? [];
+        result.data?.map((m) => ({
+          ...m,
+          item_text: m.item_name ?? m.item_text,
+          quantity: m.qty ?? m.quantity,
+          fakeId: (m.fakeId = generateRandomDigitString(10)),
+        })) ?? [];
 
       setAiResult(result.data);
     } else {
