@@ -1,6 +1,7 @@
 import Button from '@/components/atoms/Button';
 import Text from '@/components/atoms/Text';
 import CleanClassnames from '@/utils/functions/CleanClassnames';
+import { useState } from 'react';
 
 export default function Popup({
   children,
@@ -9,6 +10,9 @@ export default function Popup({
   onCancel,
   showCancel,
 }) {
+  const [hasInteractedWithButtons, setHasInteractedWithButtons] =
+    useState(false);
+
   return (
     <div
       className={CleanClassnames(`
@@ -27,16 +31,20 @@ export default function Popup({
       <div className="flex items-center justify-center gap-2 border-t bg-neutral-200">
         <Button
           onClick={() => {
+            setHasInteractedWithButtons(true);
             onAccept?.();
           }}
+          disabled={hasInteractedWithButtons}
         >
           OK
         </Button>
         {onCancel && showCancel && (
           <Button
             onClick={() => {
+              setHasInteractedWithButtons(true);
               onCancel?.();
             }}
+            disabled={hasInteractedWithButtons}
           >
             Cancel
           </Button>
