@@ -71,7 +71,7 @@ async function updateInventory(req, res, next) {
       req.user.id,
       value
     );
-    res.status(result ? 200 : 404).send();
+    res.status(result ? 200 : 404).json({ success: result });
   } catch (err) {
     next(err);
   }

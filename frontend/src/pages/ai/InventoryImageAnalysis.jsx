@@ -280,7 +280,7 @@ function InventoryImageAnalysis() {
 
     const result = await api.ai.analyzeImage(images, inventoryId);
 
-    console.info('result from AI:', { result, data: result.data[0] });
+    console.info('result from AI:', { result, data: result?.data?.[0] });
 
     if (result.success && result?.data) {
       result.data =

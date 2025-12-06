@@ -12,15 +12,23 @@ async function getImageAnalysis(req, res, next) {
       throw err;
     }
 
-    const compressed = await compress(value.imageBase64);
+    let compressed = [];
+
+    for (const ib64 of value.imageBase64) {
+      compressed.push(await compress(ib64));
+    }
 
     const aiResponse = await analyzeImage(
-      compressed,
+      value.imageBase64,
       value.language ?? req.user.language,
       value.currentItemList ?? []
     );
 
-    res.status(200).json(aiResponse);
+    if (!aiResponse.success) {
+      return res.status(500).json(aiResponse);
+    }
+
+    return res.status(200).json(aiResponse);
   } catch (err) {
     next(err);
   }

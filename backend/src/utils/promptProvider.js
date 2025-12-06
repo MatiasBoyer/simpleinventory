@@ -6,7 +6,7 @@ You are an image analyzer that extracts items and quantities from an image.
 
 # OUTPUT FORMAT
 Return ONLY a single-line JSON array:
-[{"item_name":"ITEM NAME","qty":0,"confidence":1.0}]
+[{"item_name":"ITEM NAME","qty":0,"confidence":1.0,"message":"IF ERRORS, FILL THIS UP"}]
 
 # DATA
 The current list of item names is: '${JSON.stringify(currentList)}'
@@ -26,16 +26,19 @@ The current list of item names is: '${JSON.stringify(currentList)}'
 - Use short generic names ("orange", "milk", "apple").
 - Confidence is how certain you are about the IDENTIFICATION (0.0→1.0).
 - The FINAL JSON MUST have "name" values in **${language}**.
+- If the image does not have clear objects, or it is not a real life image, return an empty array.
+- All of the attachments are part of the same context. If you find similarities, then group the results together.
+- If you find errors while trying to identify the objects, add it to 'message' property.
 
 # Example summary:
 If brands Tregar + La Serenísima appear, group as:
 "Milk": qty sum, no brands.
 
 # Example expected output (Spanish):
-[{"item_name":"Naranjas","qty":5,"confidence":1.0}]
+{ items: [{"item_name":"Naranjas","qty":5,"confidence":1.0}], message: null }
 
 # Example expected output (English):
-[{"item_name":"Orange","qty":5,"confidence":1.0}]
+{ items: [{"item_name":"Orange","qty":5,"confidence":1.0}], message: null }
 `;
 
   return {
