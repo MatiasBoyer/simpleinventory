@@ -277,10 +277,13 @@ function InventoryImageAnalysis() {
 
     const result = await api.ai.analyzeImage(images, inventoryId);
 
+    console.info(result);
+
     if (result.success) {
-      result.data = result.data.map(
-        (m) => (m.fakeId = generateRandomDigitString(10))
-      );
+      result.data =
+        result.data?.data?.map(
+          (m) => (m.fakeId = generateRandomDigitString(10))
+        ) ?? [];
 
       setAiResult(result.data);
     } else {

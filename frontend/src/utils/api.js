@@ -113,7 +113,12 @@ const ai = {
         body: JSON.stringify({ imageBase64, inventoryId }),
       });
       if (!res.ok) throw new Error(await res.text());
-      return res.json();
+
+      const json = await res.json();
+
+      console.info(json);
+
+      return json;
     }),
 };
 
