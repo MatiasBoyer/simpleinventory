@@ -31,9 +31,35 @@ async function getInventories(ownerId) {
 
 async function updateInventory(inventoryId, ownerId, updates) {
   const sql = await db.read('inventory/UpdateInventory.sql');
-  const result = await db.run(sql, { inventoryId, ownerId, ...updates });
 
-  return result?.rowCount > 0 ?? false;
+  if (updates?.inventory_name) {
+    await db.run(sql, { inventoryId, ownerId, ...updates });
+  }
+
+  if (updates?.items) {
+    console.info(updates.items);
+
+    for (const item of updates.items) {
+      const update = {
+        id: item.id ?? null,
+        item_text: item.item_text ?? null,
+        quantity: item.quantity !== 0 ? item.quantity : null,
+      };
+
+      await db.run(
+        `SELECT * FROM public.fn_modify_inventory_ctn(:ownerId, :inventoryId, :id, :item_text, :quantity)`,
+        {
+          ownerId,
+          inventoryId,
+          id: update.id,
+          item_text: update.item_text,
+          quantity: update.quantity,
+        }
+      );
+    }
+  }
+
+  return true;
 }
 
 export default {

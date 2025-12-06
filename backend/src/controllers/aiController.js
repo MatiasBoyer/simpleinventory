@@ -1,6 +1,7 @@
 import aiSchema from '#schemas/aiSchema.js';
 import compress from '#utils/imageCompress.js';
-import { analyzeImage } from '#services/imageAnalysisService.js';
+import aiService from '#services/ai/aiService.js';
+import { analyzeImage } from '#services/ai/imageAnalysisService.js';
 
 async function getImageAnalysis(req, res, next) {
   try {
@@ -11,14 +12,35 @@ async function getImageAnalysis(req, res, next) {
       throw err;
     }
 
-    const compressed = await compress(value.imageBase64);
+    let compressed = [];
 
-    const aiResponse = await analyzeImage(compressed, value.language);
+    for (const ib64 of value.imageBase64) {
+      compressed.push(await compress(ib64));
+    }
 
-    res.status(200).json(aiResponse);
+    const aiResponse = await analyzeImage(
+      value.imageBase64,
+      value.language ?? req.user.language,
+      value.currentItemList ?? []
+    );
+
+    if (!aiResponse.success) {
+      return res.status(500).json(aiResponse);
+    }
+
+    return res.status(200).json(aiResponse);
   } catch (err) {
     next(err);
   }
 }
 
-export { getImageAnalysis };
+async function getUses(req, res, next) {
+  try {
+    const uses = await aiService.getUses(req.user.id);
+    res.status(200).json({ usesLeft: uses });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export default { getImageAnalysis, getUses };
