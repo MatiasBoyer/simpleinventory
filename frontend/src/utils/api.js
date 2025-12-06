@@ -105,12 +105,12 @@ const items = {
 };
 
 const ai = {
-  analyzeImage: async (base64, inventoryId = undefined) =>
+  analyzeImage: async (imageBase64, inventoryId = undefined) =>
     apiWrap(async () => {
       const res = await fetch(`${environment.API_BASEURL}/ai/imageAnalysis`, {
         method: 'POST',
         headers: { ...baseHeaders, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ base64, inventoryId }),
+        body: JSON.stringify({ imageBase64, inventoryId }),
       });
       if (!res.ok) throw new Error(await res.text());
       return res.json();
