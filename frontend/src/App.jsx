@@ -7,6 +7,7 @@ import InventoryDisplay from './pages/inventory/InventoryDisplay';
 import NotFound from './pages/errors/NotFound';
 import Auth from './pages/auth/Auth';
 import PopupDisplayer from './components/organisms/Popup/PopupDisplayer';
+import InventoryImageAnalysis from './pages/ai/InventoryImageAnalysis';
 
 function App() {
   return (
@@ -26,6 +27,12 @@ function App() {
           <Route path="/inventory">
             <Route path="/inventory/list" element={<InventoryList />} />
             <Route path="/inventory/display" element={<InventoryDisplay />} />
+          </Route>
+          <Route path="/ai">
+            <Route
+              path="/ai/inventory/imageanalysis"
+              element={<InventoryImageAnalysis />}
+            />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

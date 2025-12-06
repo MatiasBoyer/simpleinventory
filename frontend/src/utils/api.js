@@ -41,6 +41,17 @@ const inventory = {
       if (!res.ok) throw new Error(await res.text());
       return res.json();
     }),
+  update: async (id, updates) => {
+    apiWrap(async () => {
+      const res = await fetch(`${environment.API_BASEURL}/inventory/${id}`, {
+        method: 'POST',
+        headers: { ...baseHeaders, 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return res.json();
+    });
+  },
 };
 
 const items = {
@@ -94,12 +105,12 @@ const items = {
 };
 
 const ai = {
-  analyzeImage: async (base64) =>
+  analyzeImage: async (base64, inventoryId = undefined) =>
     apiWrap(async () => {
-      const res = await fetch(`${environment.API_BASEURL}/ai/analyze`, {
+      const res = await fetch(`${environment.API_BASEURL}/ai/imageAnalysis`, {
         method: 'POST',
         headers: { ...baseHeaders, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ base64 }),
+        body: JSON.stringify({ base64, inventoryId }),
       });
       if (!res.ok) throw new Error(await res.text());
       return res.json();

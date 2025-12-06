@@ -10,18 +10,16 @@ import { PiStarFour } from 'react-icons/pi';
 import api from '@/utils/api';
 import { IoMdAdd } from 'react-icons/io';
 import ItemEntry from './components/Items/ItemEntry';
+import { authClient } from '@/utils/auth';
 
 function InventoryDisplay() {
   const navigate = useNavigate();
   const [searchParams, _] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
   const [list, setList] = useState([]);
+  const [isAiEnabled, setAiEnabled] = useState(false);
 
   const inventoryId = searchParams.get('id');
-
-  if (!inventoryId) {
-    navigate('/inventory/list');
-  }
 
   const refetchItems = async () => {
     const items = await api.items.getList(inventoryId);
@@ -44,12 +42,6 @@ function InventoryDisplay() {
     setList(items.data);
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    setIsLoading(true);
-    refetchItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const onAddItem = async (label, qty) => {
     setIsLoading(true);
@@ -113,6 +105,32 @@ function InventoryDisplay() {
 
     setList(result.data);
   };
+
+  if (!inventoryId) {
+    navigate('/inventory/list');
+  }
+
+  useEffect(() => {
+    setIsLoading(true);
+    refetchItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const session = await authClient.getSession();
+
+      console.info(session);
+
+      if (!session?.data?.user) {
+        navigate('/');
+        return;
+      }
+
+      setAiEnabled(Number(session.data.user.ai_uses) > 0);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (isLoading) {
     return (
@@ -196,9 +214,20 @@ function InventoryDisplay() {
         >
           <IoMdAdd />
         </Button>
-        <Button replaceClassname="rounded-full bg-stone-300 w-8 h-8 cursor-pointer shadow-lg border flex items-center justify-center">
-          <PiStarFour />
-        </Button>
+        {isAiEnabled && (
+          <Button
+            replaceClassname={CleanClassnames(
+              `rounded-full bg-stone-300 w-8 h-8 cursor-pointer shadow-lg border flex items-center justify-center`
+            )}
+            onClick={() => {
+              navigate(
+                `/ai/inventory/imageanalysis?inventoryId=${inventoryId}`
+              );
+            }}
+          >
+            <PiStarFour />
+          </Button>
+        )}
       </div>
     </div>
   );

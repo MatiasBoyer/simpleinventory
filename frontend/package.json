@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@shivantra/react-web-camera": "^1.0.0",
     "@tailwindcss/vite": "^4.1.17",
     "better-auth": "^1.4.5",
     "react": "^19.2.0",

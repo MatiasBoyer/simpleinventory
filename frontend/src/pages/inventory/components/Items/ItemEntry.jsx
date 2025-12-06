@@ -1,12 +1,21 @@
 import Button from '@/components/atoms/Button';
 import { AddPopup } from '@/components/organisms/Popup/PopupContainer';
-import { FaRegTrashAlt } from 'react-icons/fa';
+import { FaArrowDown, FaArrowUp, FaRegTrashAlt } from 'react-icons/fa';
 import ItemButton from './ItemButton';
+import Text from '@/components/atoms/Text';
+import Input from '@/components/atoms/Input';
 
-function ItemEntry({ item, onRemoveItem, onSumItem, onSetItemQty }) {
+function ItemEntry({
+  item,
+  onRemoveItem,
+  onSumItem,
+  onSetItemQty,
+  onItemRename,
+  difference = null,
+}) {
   return (
-    <div className="w-[95%] p-2 grid grid-cols-[5%_auto_20%] border-b flex flex-row justify-between items-center">
-      <div className="flex items-center">
+    <div className="w-[95%] p-2 grid grid-cols-[5%_1fr_20%] border-b flex flex-row justify-between items-center">
+      <div className="flex items-center justify-center">
         <Button
           onClick={() => {
             AddPopup({
@@ -20,7 +29,42 @@ function ItemEntry({ item, onRemoveItem, onSumItem, onSetItemQty }) {
           <FaRegTrashAlt />
         </Button>
       </div>
-      <div className="flex items-center">{item.item_text}</div>
+      <div className="w-full flex flex-row justify-between items-center gap-2">
+        <div
+          className="w-full max-w-[60%] px-2"
+          onDoubleClick={() =>
+            AddPopup({
+              title: 'Modify item name',
+              children: (
+                <>
+                  <Text className="w-full">New name</Text>
+                  <Input id="newName" maxLength={20} />
+                </>
+              ),
+              onAccept: (values) => {
+                if (values?.newName) onItemRename?.(values.newName);
+              },
+            })
+          }
+        >
+          <Text className="w-full">{item.item_text}</Text>
+        </div>
+        {item?.confidence && (
+          <Text className="px-2 text-center">
+            Confidence {item?.confidence * 100}%
+          </Text>
+        )}
+        {difference != null && (
+          <div className="flex flex-row items-center justify-center px-2">
+            {difference >= 0 ? (
+              <FaArrowUp className="h-[50%] w-[50%]" />
+            ) : (
+              <FaArrowDown className="h-[50%] w-[50%]" />
+            )}
+            <Text>{difference}</Text>
+          </div>
+        )}
+      </div>
       <div className="grid grid-cols-[30%_auto_30%]">
         <ItemButton
           type="-"
