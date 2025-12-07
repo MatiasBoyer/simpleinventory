@@ -282,16 +282,16 @@ function InventoryImageAnalysis() {
 
     console.info('result from AI:', { result, data: result?.data?.[0] });
 
-    if (result.success && result?.data) {
-      result.data =
-        result.data?.map((m) => ({
+    if (result.success && result?.data?.data) {
+      result.data.data =
+        result.data.data.map((m) => ({
           ...m,
           item_text: m.item_name ?? m.item_text,
           quantity: m.qty ?? m.quantity,
           fakeId: (m.fakeId = generateRandomDigitString(10)),
         })) ?? [];
 
-      setAiResult(result.data);
+      setAiResult(result.data.data);
     } else {
       AddPopup({
         children: (
