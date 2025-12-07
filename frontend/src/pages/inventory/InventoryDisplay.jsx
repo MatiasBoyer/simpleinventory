@@ -11,6 +11,7 @@ import api from '@/utils/api';
 import { IoMdAdd } from 'react-icons/io';
 import ItemEntry from './components/Items/ItemEntry';
 import { authClient } from '@/utils/auth';
+import Header from '@/components/organisms/Header/Header';
 
 function InventoryDisplay() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ function InventoryDisplay() {
   const [isAiEnabled, setAiEnabled] = useState(false);
 
   const inventoryId = searchParams.get('id');
+  const label = searchParams.get('label');
 
   const refetchItems = async () => {
     const items = await api.items.getList(inventoryId);
@@ -150,6 +152,7 @@ function InventoryDisplay() {
 
   return (
     <div className="h-full">
+      <Header text={label ?? 'Items'} inventoryId={null} />
       <div className="flex flex-col items-center gap-1">
         {list.map((item) => (
           <ItemEntry

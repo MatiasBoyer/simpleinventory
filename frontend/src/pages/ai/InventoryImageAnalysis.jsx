@@ -12,6 +12,8 @@ import Text from '@/components/atoms/Text';
 import api from '@/utils/api';
 import { useNavigate, useSearchParams } from 'react-router';
 import { generateRandomDigitString } from '@/utils/random';
+import { RiArrowGoBackFill } from 'react-icons/ri';
+import Header from '@/components/organisms/Header/Header';
 
 function CameraCapturer({ isLoading, canCapture, onImage, onNext }) {
   const [isCapturing, setIsCapturing] = useState(false);
@@ -158,45 +160,47 @@ function AnalyzedList({ inventoryId, aiResult, navigate }) {
   };
 
   return (
-    <div className="relative w-full h-full">
-      <div
-        className={CleanClassnames(
-          `
+    <>
+      <Header text="AI Results" inventoryId={inventoryId} />
+      <div className="relative w-full h-full">
+        <div
+          className={CleanClassnames(
+            `
           absolute w-full h-full z-999 backdrop-blur-sm 
           flex items-center justify-center 
           transition-opacity duration-100
           ${!isLoading ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}
           `
-        )}
-      >
-        <div className="flex items-center justify-center w-16 h-16">
-          <AiOutlineLoading className="w-full h-full animate-spin" />
+          )}
+        >
+          <div className="flex items-center justify-center w-16 h-16">
+            <AiOutlineLoading className="w-full h-full animate-spin" />
+          </div>
         </div>
-      </div>
-      <div className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50 gap-3">
-        <Button
-          replaceClassname={CleanClassnames(
-            `
+        <div className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50 gap-3">
+          <Button
+            replaceClassname={CleanClassnames(
+              `
               rounded-full w-8 h-8 cursor-pointer shadow-lg border flex items-center justify-center
               transition-all opacity-100
               bg-stone-100 hover:bg-stone-200 active:bg-stone-400 disabled:bg-stone-500
               `
-          )}
-          onClick={onComplete}
-        >
-          <FaArrowRight />
-        </Button>
-      </div>
-      <div className="w-full h-full overflow-y-auto">
-        <div className="flex flex-col items-center justify-start">
-          {finalResult.map((item, index) => (
-            <ItemEntry
-              item={item}
-              onSumItem={(_, quantity) => onSetItemQty(index, quantity)}
-              onRemoveItem={() => onRemoveItem(index)}
-              onSetItemQty={(_, quantity) => onSetItemQty(index, quantity)}
-              onItemRename={(newName) => onItemRename(index, newName)}
-              /*difference={(() => {
+            )}
+            onClick={onComplete}
+          >
+            <FaArrowRight />
+          </Button>
+        </div>
+        <div className="w-full h-full overflow-y-auto">
+          <div className="flex flex-col items-center justify-start">
+            {finalResult.map((item, index) => (
+              <ItemEntry
+                item={item}
+                onSumItem={(_, quantity) => onSetItemQty(index, quantity)}
+                onRemoveItem={() => onRemoveItem(index)}
+                onSetItemQty={(_, quantity) => onSetItemQty(index, quantity)}
+                onItemRename={(newName) => onItemRename(index, newName)}
+                /*difference={(() => {
                 const found = aiResult.find((x) =>
                   x.fakeId ? x.fakeId === item.fakeId : undefined
                 );
@@ -207,12 +211,13 @@ function AnalyzedList({ inventoryId, aiResult, navigate }) {
 
                 return item.quantity;
               })()}*/
-              key={index}
-            />
-          ))}
+                key={index}
+              />
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
