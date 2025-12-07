@@ -4,6 +4,7 @@ import { GetAIClient } from '#config/ai.js';
 import { json } from 'express';
 import cors from 'cors';
 import corsConfig from '#config/cors.js';
+import environment from '#config/environment.js';
 
 /**
  * @param {import('express').Application} app - express app
@@ -12,7 +13,9 @@ function setup(app) {
   GetAIClient();
   app.use(cors(corsConfig));
   app.use(json({ limit: '10mb' }));
-  app.use(routesIndex);
+
+  app.use(environment.API_PATH, routesIndex);
+
   app.use(errorHandler);
 }
 
