@@ -20,7 +20,8 @@
     "lint": "eslint --config eslint.config.mjs .",
     "lint:fix": "eslint --config eslint.config.mjs . --fix",
     "format": "prettier --write .",
-    "dev": "nodemon ."
+    "dev": "nodemon .",
+    "start": "node src/server.js"
   },
   "dependencies": {
     "@google/genai": "^1.31.0",
