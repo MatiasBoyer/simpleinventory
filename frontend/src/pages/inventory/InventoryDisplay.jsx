@@ -108,6 +108,18 @@ function InventoryDisplay() {
     setList(result.data);
   };
 
+  const onItemRename = async (itemId, name) => {
+    console.info({ itemId, name });
+
+    const result = await api.items.modifyName(inventoryId, itemId, name);
+
+    if (!result.success) {
+      return;
+    }
+
+    refetchItems();
+  };
+
   if (!inventoryId) {
     navigate('/inventory/list');
   }
@@ -161,6 +173,7 @@ function InventoryDisplay() {
             onRemoveItem={onRemoveItem}
             onSumItem={onSetItemQty}
             onSetItemQty={onSetItemQty}
+            onItemRename={(newName) => onItemRename(item.id, newName)}
           />
         ))}
       </div>

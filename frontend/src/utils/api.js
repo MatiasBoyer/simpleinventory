@@ -147,6 +147,19 @@ const items = {
       if (!res.ok) throw new Error(await res.text());
       return await res.json();
     }),
+  modifyName: async (inventoryId, itemId, item_text) =>
+    apiWrap(async () => {
+      const res = await fetch(
+        `${environment.API_BASEURL}/inventory/${inventoryId}/items/${itemId}`,
+        {
+          method: 'PATCH',
+          headers: { ...baseHeaders, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ item_text: item_text }),
+        }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      return await res.json();
+    }),
 };
 
 const ai = {
