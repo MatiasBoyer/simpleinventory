@@ -166,16 +166,18 @@ function InventoryDisplay() {
     <div className="h-full">
       <Header text={label ?? 'Items'} inventoryId={null} />
       <div className="flex flex-col items-center gap-1">
-        {list.map((item) => (
-          <ItemEntry
-            item={item}
-            key={item.id}
-            onRemoveItem={onRemoveItem}
-            onSumItem={onSetItemQty}
-            onSetItemQty={onSetItemQty}
-            onItemRename={(newName) => onItemRename(item.id, newName)}
-          />
-        ))}
+        {list
+          .sort((a, b) => a.id - b.id)
+          .map((item) => (
+            <ItemEntry
+              item={item}
+              key={item.id}
+              onRemoveItem={onRemoveItem}
+              onSumItem={onSetItemQty}
+              onSetItemQty={onSetItemQty}
+              onItemRename={(newName) => onItemRename(item.id, newName)}
+            />
+          ))}
       </div>
       <div className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50 gap-3">
         <Button
