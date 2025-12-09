@@ -12,87 +12,107 @@ import Text from '@/components/atoms/Text';
 import api from '@/utils/api';
 import { useNavigate, useSearchParams } from 'react-router';
 import { generateRandomDigitString } from '@/utils/random';
-import { RiArrowGoBackFill } from 'react-icons/ri';
+import { GrGallery } from 'react-icons/gr';
 import Header from '@/components/organisms/Header/Header';
+import RoundedButton from '@/components/molecules/RoundedButton';
+
+async function ReadFile(file, { onComplete } = {}) {
+  const reader = new FileReader();
+
+  reader.onload = (e) => {
+    const result = e.target.result;
+    onComplete?.(result);
+  };
+
+  reader.onerror = (error) => {
+    console.error('Error reading file:', error);
+    onComplete?.(null);
+  };
+
+  reader.readAsDataURL(file);
+}
 
 function CameraCapturer({ isLoading, canCapture, onImage, onNext }) {
   const [isCapturing, setIsCapturing] = useState(false);
   const cameraHandler = useRef(null);
+  const fileInputRef = useRef(null);
+
+  console.info({ canCapture });
+
+  const onCompleteCapture = (base64 = null) => {
+    setIsCapturing(false);
+
+    if (base64) {
+      onImage?.(base64);
+    }
+  };
 
   const captureImage = async () => {
     setIsCapturing(true);
     const file = await cameraHandler.current?.capture();
 
-    const onComplete = (base64 = null) => {
-      setIsCapturing(false);
-
-      if (base64) {
-        onImage?.(base64);
-      }
-    };
-
     if (file) {
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        const result = e.target.result;
-        onComplete(result);
-      };
-
-      reader.onerror = (error) => {
-        console.error('Error reading file:', error);
-        onComplete(null);
-      };
-
-      reader.readAsDataURL(file);
+      ReadFile(file, { onComplete: onCompleteCapture });
     }
   };
 
+  const openImageSelect = () => {
+    fileInputRef?.current?.click();
+  };
+
+  const onImageChange = async (e) => {
+    setIsCapturing(true);
+    const file = e?.target?.files?.[0];
+
+    if (!file) return setIsCapturing(false);
+
+    ReadFile(file, { onComplete: onCompleteCapture });
+
+    setIsCapturing(false);
+  };
+
   return (
-    <div className="relative w-full h-full">
-      {isLoading && (
-        <div className="absolute backdrop-blur-sm w-full h-full z-999 flex items-center justify-center">
-          <AiOutlineLoading className="w-[25%] h-[25%] animate-spin" />
+    <>
+      <div className="relative w-full h-full">
+        {isLoading && (
+          <div className="absolute backdrop-blur-sm w-full h-full z-999 flex items-center justify-center">
+            <AiOutlineLoading className="w-[25%] h-[25%] animate-spin" />
+          </div>
+        )}
+        <WebCamera
+          className="w-full h-full"
+          captureMode="back"
+          captureQuality={0.7}
+          facingMode="user"
+          ref={cameraHandler}
+        />
+        <div className="absolute w-full h-[15%] bottom-0 left-0 right-0 flex items-start justify-center gap-3">
+          <RoundedButton
+            onClick={openImageSelect}
+            disabled={(isCapturing && !isLoading) || !canCapture}
+          >
+            <GrGallery className="w-[50%] h-[50%]" />
+          </RoundedButton>
+          <RoundedButton
+            onClick={captureImage}
+            disabled={(isCapturing && !isLoading) || !canCapture}
+          >
+            <CiCamera className="w-[75%] h-[75%]" />
+          </RoundedButton>
+          <RoundedButton onClick={onNext} disabled={isCapturing && !isLoading}>
+            <GoArrowRight className="w-[75%] h-[75%]" />
+          </RoundedButton>
         </div>
-      )}
-      <WebCamera
-        className="w-full h-full"
-        captureMode="back"
-        captureQuality={0.7}
-        facingMode="user"
-        ref={cameraHandler}
-      />
-      <div className="absolute w-full h-[15%] bottom-0 left-0 right-0 flex items-start justify-center gap-3">
-        <Button
-          replaceClassname={CleanClassnames(
-            `
-            relative rounded-full w-16 h-16 shadow-md
-            transition-all duration-100
-            bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-700 disabled:bg-neutral-600
-            flex items-center justify-center
-            `
-          )}
-          onClick={captureImage}
-          disabled={(isCapturing && !isLoading) || !canCapture}
-        >
-          <CiCamera className="w-[75%] h-[75%]" />
-        </Button>
-        <Button
-          replaceClassname={CleanClassnames(
-            `
-            relative rounded-full w-16 h-16 shadow-md
-            transition-all duration-100
-            bg-neutral-200 hover:bg-neutral-300 active:bg-neutral-700 disabled:bg-neutral-600
-            flex items-center justify-center
-            `
-          )}
-          onClick={onNext}
-          disabled={isCapturing && !isLoading}
-        >
-          <GoArrowRight className="w-[75%] h-[75%]" />
-        </Button>
       </div>
-    </div>
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileInputRef}
+        onChange={onImageChange}
+        max={1}
+        style={{ display: 'none' }}
+      />
+    </>
   );
 }
 
