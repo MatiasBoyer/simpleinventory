@@ -15,6 +15,7 @@ import { generateRandomDigitString } from '@/utils/random';
 import { GrGallery } from 'react-icons/gr';
 import Header from '@/components/organisms/Header/Header';
 import RoundedButton from '@/components/molecules/RoundedButton';
+import LoadingScreen from '@/components/organisms/LoadingScreen';
 
 async function ReadFile(file, { onComplete } = {}) {
   const reader = new FileReader();
@@ -32,7 +33,13 @@ async function ReadFile(file, { onComplete } = {}) {
   reader.readAsDataURL(file);
 }
 
-function CameraCapturer({ isLoading, canCapture, onImage, onNext }) {
+function CameraCapturer({
+  isLoading,
+  canCapture,
+  canContinue,
+  onImage,
+  onNext,
+}) {
   const [isCapturing, setIsCapturing] = useState(false);
   const cameraHandler = useRef(null);
   const fileInputRef = useRef(null);
@@ -99,7 +106,10 @@ function CameraCapturer({ isLoading, canCapture, onImage, onNext }) {
           >
             <CiCamera className="w-[75%] h-[75%]" />
           </RoundedButton>
-          <RoundedButton onClick={onNext} disabled={isCapturing && !isLoading}>
+          <RoundedButton
+            onClick={onNext}
+            disabled={(isCapturing && !isLoading) || !canContinue}
+          >
             <GoArrowRight className="w-[75%] h-[75%]" />
           </RoundedButton>
         </div>
@@ -116,7 +126,7 @@ function CameraCapturer({ isLoading, canCapture, onImage, onNext }) {
   );
 }
 
-function AnalyzedList({ inventoryId, aiResult, navigate }) {
+function AnalyzedList({ inventoryId, aiResult, navigate, onReturn }) {
   const [isLoading, setIsLoading] = useState(false);
   const [finalResult, setFinalResult] = useState(aiResult);
 
@@ -181,7 +191,7 @@ function AnalyzedList({ inventoryId, aiResult, navigate }) {
 
   return (
     <>
-      <Header text="AI Results" inventoryId={inventoryId} />
+      <Header text="AI Results" onReturn={onReturn} />
       <div className="relative w-full h-full">
         <div
           className={CleanClassnames(
@@ -333,14 +343,12 @@ function InventoryImageAnalysis() {
     setIsLoading(false);
   };
 
+  const onReturn = () => {
+    navigate(`/inventory/display?id=${inventoryId}`);
+  };
+
   if (isLoading) {
-    return (
-      <div className="w-full h-full flex items-center justify-center">
-        <div className="w-16 h-16 flex items-center justify-center">
-          <AiOutlineLoading className="w-full h-full animate-spin" />
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (aiResult) {
@@ -349,12 +357,14 @@ function InventoryImageAnalysis() {
         inventoryId={inventoryId}
         aiResult={aiResult}
         navigate={navigate}
+        onReturn={onReturn}
       />
     );
   }
 
   return (
     <div className="relative w-full h-full">
+      <Header text="AI Capturer" onReturn={onReturn} />
       <div
         className="absolute w-full h-fit z-10 overflow-x-auto"
         ref={imagesRef}
@@ -379,6 +389,7 @@ function InventoryImageAnalysis() {
       <CameraCapturer
         isLoading={isLoading}
         canCapture={canCapture}
+        canContinue={images.length > 0}
         onImage={onImageAdd}
         onNext={onAnalyze}
       />
