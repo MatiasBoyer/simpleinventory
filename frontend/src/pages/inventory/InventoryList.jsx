@@ -13,6 +13,7 @@ import { generateRandomDigitString } from '@/utils/random.js';
 import Header from '@/components/organisms/Header/Header';
 import LoadingScreen from '@/components/organisms/LoadingScreen';
 import RoundedButton from '@/components/molecules/RoundedButton';
+import ButtonFooter from '@/components/organisms/ButtonFooter';
 
 function Entry({ label, id, onDelete }) {
   const navigate = useNavigate();
@@ -181,11 +182,11 @@ function InventoryList() {
           />
         ))}
       </div>
-      <footer className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50 gap-3">
+      <ButtonFooter>
         <RoundedButton onClick={onCreate}>
           <IoMdAdd />
         </RoundedButton>
-      </footer>
+      </ButtonFooter>
     </>
   );
 }

@@ -10,6 +10,7 @@ import Header from '@/components/organisms/Header/Header';
 import LoadingScreen from '@/components/organisms/LoadingScreen';
 import getSession from '@/utils/hooks/getSession';
 import RoundedButton from '@/components/molecules/RoundedButton';
+import ButtonFooter from '@/components/organisms/ButtonFooter';
 
 const updateChangesTimeout = 2000;
 
@@ -248,7 +249,7 @@ function InventoryDisplay() {
               />
             ))}
         </section>
-        <footer className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50 gap-3">
+        <ButtonFooter>
           <RoundedButton onClick={onAddItemButton}>
             <IoMdAdd />
           </RoundedButton>
@@ -257,7 +258,7 @@ function InventoryDisplay() {
               <PiStarFour />
             </RoundedButton>
           )}
-        </footer>
+        </ButtonFooter>
       </div>
     );
   }

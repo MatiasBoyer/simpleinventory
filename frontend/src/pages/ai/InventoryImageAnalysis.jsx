@@ -16,6 +16,7 @@ import { GrGallery } from 'react-icons/gr';
 import Header from '@/components/organisms/Header/Header';
 import RoundedButton from '@/components/molecules/RoundedButton';
 import LoadingScreen from '@/components/organisms/LoadingScreen';
+import ButtonFooter from '@/components/organisms/ButtonFooter';
 
 async function ReadFile(file, { onComplete } = {}) {
   const reader = new FileReader();
@@ -93,7 +94,7 @@ function CameraCapturer({
           facingMode="user"
           ref={cameraHandler}
         />
-        <div className="absolute w-full h-[15%] bottom-0 left-0 right-0 flex items-start justify-center gap-3">
+        <ButtonFooter>
           <RoundedButton
             onClick={openImageSelect}
             disabled={(isCapturing && !isLoading) || !canCapture}
@@ -112,7 +113,7 @@ function CameraCapturer({
           >
             <GoArrowRight className="w-[75%] h-[75%]" />
           </RoundedButton>
-        </div>
+        </ButtonFooter>
       </div>
       <input
         type="file"
@@ -189,38 +190,12 @@ function AnalyzedList({ inventoryId, aiResult, navigate, onReturn }) {
     });
   };
 
+  if (isLoading) return <LoadingScreen />;
+
   return (
     <>
       <Header text="AI Results" onReturn={onReturn} />
       <div className="relative w-full h-full">
-        <div
-          className={CleanClassnames(
-            `
-          absolute w-full h-full z-999 backdrop-blur-sm 
-          flex items-center justify-center 
-          transition-opacity duration-100
-          ${!isLoading ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}
-          `
-          )}
-        >
-          <div className="flex items-center justify-center w-16 h-16">
-            <AiOutlineLoading className="w-full h-full animate-spin" />
-          </div>
-        </div>
-        <div className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50 gap-3">
-          <Button
-            replaceClassname={CleanClassnames(
-              `
-              rounded-full w-8 h-8 cursor-pointer shadow-lg border flex items-center justify-center
-              transition-all opacity-100
-              bg-stone-100 hover:bg-stone-200 active:bg-stone-400 disabled:bg-stone-500
-              `
-            )}
-            onClick={onComplete}
-          >
-            <FaArrowRight />
-          </Button>
-        </div>
         <div className="w-full h-full overflow-y-auto">
           <div className="flex flex-col items-center justify-start">
             {finalResult.map((item, index) => (
@@ -230,22 +205,16 @@ function AnalyzedList({ inventoryId, aiResult, navigate, onReturn }) {
                 onRemoveItem={() => onRemoveItem(index)}
                 onSetItemQty={(_, quantity) => onSetItemQty(index, quantity)}
                 onItemRename={(newName) => onItemRename(index, newName)}
-                /*difference={(() => {
-                const found = aiResult.find((x) =>
-                  x.fakeId ? x.fakeId === item.fakeId : undefined
-                );
-
-                if (found) {
-                  return found.quantity - item.quantity;
-                }
-
-                return item.quantity;
-              })()}*/
                 key={index}
               />
             ))}
           </div>
         </div>
+        <ButtonFooter>
+          <RoundedButton onClick={onComplete}>
+            <FaArrowRight />
+          </RoundedButton>
+        </ButtonFooter>
       </div>
     </>
   );
