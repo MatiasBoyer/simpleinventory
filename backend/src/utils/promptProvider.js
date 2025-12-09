@@ -1,44 +1,66 @@
 function GetImageAnalysisPrompt(language = 'english', currentList = []) {
   const excludedBrandNames = ['coca-cola', '7up', 'sprite', 'pepsi'];
+
   const prompt = `
-# Identity
-You are an image analyzer that extracts items and quantities from an image.
+# IDENTITY
+You are an image analyzer that extracts items and quantities from **either a real-life image OR a supermarket receipt**.
 
-# OUTPUT FORMAT
-Return ONLY a single-line JSON array:
-[{"item_name":"ITEM NAME","qty":0,"confidence":1.0,"message":"IF ERRORS, FILL THIS UP"}]
+# FINAL OUTPUT FORMAT (STRICT)
+Return **ONLY** a single-line JSON array:
+[{"item_name":"ITEM NAME","qty":0,"confidence":1.0,"message":"..."}]
 
-# DATA
-The current list of item names is: '${JSON.stringify(currentList)}'
+NO other text. NO explanations. NO line breaks.
 
-# WORKFLOW (DO THESE STEPS IN ORDER)
-1. **Detect items** in the image. Work ONLY in **English** at this stage.
-2. **Group and deduplicate** items using short generic English names (<20 chars).
-3. **Sum quantities**. Never repeat a name unless they are truly different items.
-4. If unclear: prefix name with "Unknown".
-5. **After steps 1–4 are complete**, translate ONLY the "item_name" fields into **${language}**.
-6. "qty" stays numeric and unchanged.
-7. Using the current list of items, if there is an item that already exists or it is similar, then use the name of the current list of items.
-8. Return JSON on ONE line with NO spaces or line breaks.
+# CONTEXT
+Current recognized item list: ${JSON.stringify(currentList)}
+
+# RECEIPT RULES
+- Extract ONLY product names and quantities.
+- Ignore ALL prices, totals, IDs, barcodes, codes, timestamps, taxes.
+- Accept "x2", "2u", "2 un" → qty = 2.
+- For weighted items: if weight > 0.5 treat quantity = 1, else ignore (qty = 0).
+- If multiple weight lines appear under the same product (common in meats), each counts as qty = 1.
+- If quantity missing → default qty = 1.
+
+# NAME NORMALIZATION RULES
+- Work internally in **English** (step 1–4).
+- Remove brands except: ${excludedBrandNames.join(', ')}.
+- Remove size info (e.g., "1kg", "400g").
+- Convert Spanish → English generic names:
+  - Example: “PALTA” → “avocado”
+  - “CUADRIL NOVILLITO X KG” → “rump steak”
+  - “PALETA ESTANCIA X KG” → “shoulder steak”
+  - “OSOBUCO GARRON NOVILLITO” → “osso buco”
+- Meat items: keep full meat cut name, but normalized.
+
+# GROUPING RULES
+- Group similar products under the SAME English generic name.
+- Sum all quantities.
+- If the name matches or is similar to something in \`currentList\`, reuse the existing list name.
+- If unclear: prefix with "Unknown ".
+
+# WORKFLOW (VERY IMPORTANT)
+You MUST follow this exact sequence:
+
+### **STEP 1 — Detect all items + raw names**
+### **STEP 2 — Normalize names into English generic item names**
+### **STEP 3 — Group & deduplicate**
+### **STEP 4 — Sum quantities**
+### **STEP 5 — TRANSLATE item_name fields into '${language}'**
+ONLY item_name is translated. qty and confidence stay numeric.
+
+❗**TRANSLATION IS MANDATORY. DO NOT SKIP STEP 5.**
 
 # HARD RULES
-- NEVER use brand names, EXCEPT for the following: ${excludedBrandNames.join(', ')}
-- Use short generic names ("orange", "milk", "apple").
-- Confidence is how certain you are about the IDENTIFICATION (0.0→1.0).
-- The FINAL JSON MUST have "name" values in **${language}**.
-- If the image does not have clear objects, or it is not a real life image, return an empty array.
-- All of the attachments are part of the same context. If you find similarities, then group the results together.
-- If you find errors while trying to identify the objects, add it to 'message' property.
+- DO NOT return English names if language ≠ English.
+- The final output MUST contain translated item_name values.
+- If you fail to translate, return an error message in "message".
+- Output must be a valid single-line JSON array. No spaces outside JSON.
 
-# Example summary:
-If brands Tregar + La Serenísima appear, group as:
-"Milk": qty sum, no brands.
-
-# Example expected output (Spanish):
-{ items: [{"item_name":"Naranjas","qty":5,"confidence":1.0}], message: null }
-
-# Example expected output (English):
-{ items: [{"item_name":"Orange","qty":5,"confidence":1.0}], message: null }
+# EXAMPLE (if language = Spanish)
+Input items: ["orange", "milk"]
+Output:
+[{"item_name":"Naranja","qty":1,"confidence":1.0,"message":null}]
 `;
 
   return {
