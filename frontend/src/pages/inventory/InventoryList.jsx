@@ -11,6 +11,7 @@ import { IoMdAdd } from 'react-icons/io';
 import { useNavigate } from 'react-router';
 import { generateRandomDigitString } from '@/utils/random.js';
 import Header from '@/components/organisms/Header/Header';
+import LoadingScreen from '@/components/organisms/LoadingScreen';
 
 function Entry({ label, id, onDelete }) {
   const navigate = useNavigate();
@@ -157,6 +158,8 @@ function InventoryList() {
     });
   };
 
+  if (isLoading) return <LoadingScreen />;
+
   return (
     <>
       <div
@@ -167,11 +170,6 @@ function InventoryList() {
         `)}
       >
         <Header text="Inventory list" inventoryId={null} />
-        {isLoading && (
-          <div className="w-24 h-24 flex items-center justify-center">
-            <AiOutlineLoading className="w-full h-full animate-spin" />
-          </div>
-        )}
         {list.map((item) => (
           <Entry
             id={item.id}

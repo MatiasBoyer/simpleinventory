@@ -8,6 +8,7 @@ function LoadingScreen({ className }) {
                 relative w-full h-full
                 flex flex-col items-center justify-center
                 ${className}
+                z-999
                 `)}
     >
       <div className="w-24 h-24 flex items-center justify-center">
