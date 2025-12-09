@@ -23,7 +23,7 @@ async function getImageAnalysis(req, res, next) {
       await itemService.getItems(value.inventoryId, req.user.id)
     )?.flatMap((m) => m.item_text);
 
-    console.info({ currentItemList });
+    //console.info({ currentItemList });
 
     const aiResponse = await analyzeImage(
       value.imageBase64,
