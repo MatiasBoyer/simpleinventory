@@ -106,7 +106,7 @@ function CameraCapturer({ isLoading, canCapture, onImage, onNext }) {
       </div>
       <input
         type="file"
-        accept="image/*"
+        accept="image/jpeg, image/png"
         ref={fileInputRef}
         onChange={onImageChange}
         max={1}
