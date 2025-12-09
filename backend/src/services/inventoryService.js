@@ -29,6 +29,16 @@ async function getInventories(ownerId) {
   return result?.rows ?? [];
 }
 
+async function getInventory(ownerId, inventoryId) {
+  const sql = await db.read('inventory/FetchInventory.sql');
+  const result = await db.run(sql, {
+    ownerId,
+    inventoryId,
+  });
+
+  return result?.rows ?? [];
+}
+
 async function updateInventory(inventoryId, ownerId, updates) {
   const sql = await db.read('inventory/UpdateInventory.sql');
 
@@ -66,5 +76,6 @@ export default {
   createInventory,
   deleteInventory,
   getInventories,
+  getInventory,
   updateInventory,
 };
