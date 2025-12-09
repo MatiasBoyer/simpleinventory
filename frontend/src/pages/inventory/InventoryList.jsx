@@ -10,12 +10,13 @@ import { AiOutlineLoading } from 'react-icons/ai';
 import { IoMdAdd } from 'react-icons/io';
 import { useNavigate } from 'react-router';
 import { generateRandomDigitString } from '@/utils/random.js';
+import Header from '@/components/organisms/Header/Header';
 
 function Entry({ label, id, onDelete }) {
   const navigate = useNavigate();
 
   const onModify = () => {
-    navigate(`/inventory/display?id=${id}`);
+    navigate(`/inventory/display?id=${id}&label=${label}`);
   };
 
   return (
@@ -165,6 +166,7 @@ function InventoryList() {
         ${!isLoading ? '' : 'justify-center'}
         `)}
       >
+        <Header text="Inventory list" inventoryId={null} />
         {isLoading && (
           <div className="w-24 h-24 flex items-center justify-center">
             <AiOutlineLoading className="w-full h-full animate-spin" />

@@ -29,11 +29,16 @@ function _autocastDeep(obj) {
 }
 
 async function apiWrap(fn) {
+  let data;
   try {
-    const data = await fn();
+    data = await fn();
     return { success: true, data: _autocastDeep(data), message: null };
   } catch (err) {
-    return { success: false, data: null, message: err?.message || String(err) };
+    return {
+      success: false,
+      data: _autocastDeep(data),
+      message: err?.message || String(err),
+    };
   }
 }
 
@@ -150,22 +155,37 @@ const items = {
       if (!res.ok) throw new Error(await res.text());
       return await res.json();
     }),
+  modifyName: async (inventoryId, itemId, item_text) =>
+    apiWrap(async () => {
+      const res = await fetch(
+        `${environment.API_BASEURL}/inventory/${inventoryId}/items/${itemId}`,
+        {
+          method: 'PATCH',
+          headers: { ...baseHeaders, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ item_text: item_text }),
+        }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      return await res.json();
+    }),
 };
 
 const ai = {
   analyzeImage: async (imageBase64, inventoryId) => {
-    const res = await fetch(`${environment.API_BASEURL}/ai/imageAnalysis`, {
-      method: 'POST',
-      headers: { ...baseHeaders, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ imageBase64, inventoryId }),
+    return apiWrap(async () => {
+      const res = await fetch(`${environment.API_BASEURL}/ai/imageAnalysis`, {
+        method: 'POST',
+        headers: { ...baseHeaders, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageBase64, inventoryId }),
+      });
+      if (!res.ok) throw new Error(await res.text());
+
+      const json = await res.json();
+
+      console.info('json', json);
+
+      return json;
     });
-    if (!res.ok) throw new Error(await res.text());
-
-    const json = await res.json();
-
-    console.info('json', json);
-
-    return json;
   },
 };
 

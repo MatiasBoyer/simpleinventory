@@ -23,7 +23,7 @@ function Register() {
       // session is present
       if (session.data) {
         // session is not expired
-        if (session.data.session.expiresAt > Date.now())
+        if (session?.data?.session?.expiresAt > Date.now())
           navigate(loginCallbackUrl);
       }
     })();

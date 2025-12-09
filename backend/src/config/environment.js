@@ -12,6 +12,7 @@ const config = {
     DBNAME: process.env.DB_NAME,
   },
   CORS: process.env.CORS.split('|') ?? ['http://localhost:5173'],
+  API_PATH: process.env.API_PATH ?? '/simpleinventory',
 };
 
 if (!config.GEMINI_API_KEY) {

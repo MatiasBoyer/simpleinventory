@@ -10,13 +10,19 @@ import api from '@/utils/api';
 import { IoMdAdd } from 'react-icons/io';
 import ItemEntry from './components/Items/ItemEntry';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { authClient } from '@/utils/auth';
 =======
+=======
+>>>>>>> master
 import Header from '@/components/organisms/Header/Header';
 import LoadingScreen from '@/components/organisms/LoadingScreen';
 import getSession from '@/utils/hooks/getSession';
 import RoundedButton from '@/components/molecules/RoundedButton';
+<<<<<<< HEAD
 >>>>>>> 90f1cbe (refactor: separated api and session, roundedbutton)
+=======
+>>>>>>> master
 
 function InventoryDisplay() {
   const navigate = useNavigate();
@@ -29,16 +35,22 @@ function InventoryDisplay() {
   const inventoryId = searchParams.get('id');
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   const refetchItems = async () => {
     const items = await api.items.getList(inventoryId);
     console.info({ items });
     if (!items.success) {
 =======
+=======
+>>>>>>> master
   // functions
   const refetchItems = async ({ onComplete } = {}) => {
     const result = await api.inventory.getInventory(inventoryId);
     if (!result.success) {
+<<<<<<< HEAD
 >>>>>>> 90f1cbe (refactor: separated api and session, roundedbutton)
+=======
+>>>>>>> master
       AddPopup({
         title: 'Failure',
         children: (
@@ -56,7 +68,6 @@ function InventoryDisplay() {
     setApiData(result.data);
     onComplete?.();
   };
-
   const onAddItem = async (label, qty) => {
     const result = await api.items.addItem(inventoryId, label, qty);
 
@@ -75,7 +86,6 @@ function InventoryDisplay() {
 
     await refetchItems();
   };
-
   const onRemoveItem = async (id) => {
     const result = await api.items.removeItem(inventoryId, id);
 
@@ -94,7 +104,6 @@ function InventoryDisplay() {
 
     await refetchItems();
   };
-
   const onSetItemQty = async (itemId, qty) => {
     if (qty < 0) return;
 
@@ -115,6 +124,20 @@ function InventoryDisplay() {
 
     setApiData((p) => ({ ...p, content: result.data }));
   };
+<<<<<<< HEAD
+=======
+  const onItemRename = async (itemId, name) => {
+    console.info({ itemId, name });
+
+    const result = await api.items.modifyName(inventoryId, itemId, name);
+
+    if (!result.success) {
+      return;
+    }
+
+    refetchItems();
+  };
+>>>>>>> master
 
   // buttons
   const onAddItemButton = () => {
@@ -172,7 +195,9 @@ function InventoryDisplay() {
     navigate('/inventory/list');
   }
 
+  // effects
   useEffect(() => {
+<<<<<<< HEAD
 <<<<<<< HEAD
     setIsLoading(true);
     refetchItems();
@@ -183,6 +208,9 @@ function InventoryDisplay() {
 =======
     // fetch session
 >>>>>>> 90f1cbe (refactor: separated api and session, roundedbutton)
+=======
+    // fetch session
+>>>>>>> master
     (async () => {
       getSession({
         onSession: () => setAiEnabled(true),
@@ -198,7 +226,10 @@ function InventoryDisplay() {
   }, []);
 
   if (isLoading) {
+    return <LoadingScreen />;
+  } else {
     return (
+<<<<<<< HEAD
 <<<<<<< HEAD
       <div
         className={CleanClassnames(`
@@ -211,6 +242,8 @@ function InventoryDisplay() {
           <AiOutlineLoading className="w-full h-full animate-spin" />
         </div>
 =======
+=======
+>>>>>>> master
       <div className="h-full">
         <Header text={apiData?.header?.inventory_name ?? 'Items'} />
         <section className="flex flex-col items-center gap-1">
@@ -237,94 +270,13 @@ function InventoryDisplay() {
             </RoundedButton>
           )}
         </footer>
+<<<<<<< HEAD
 >>>>>>> 90f1cbe (refactor: separated api and session, roundedbutton)
+=======
+>>>>>>> master
       </div>
     );
   }
-
-  return (
-    <div className="h-full">
-      <div className="flex flex-col items-center gap-1">
-        {list.map((item) => (
-          <ItemEntry
-            item={item}
-            key={item.id}
-            onRemoveItem={onRemoveItem}
-            onSumItem={onSetItemQty}
-            onSetItemQty={onSetItemQty}
-          />
-        ))}
-      </div>
-      <div className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50 gap-3">
-        <Button
-          replaceClassname="rounded-full bg-stone-300 w-8 h-8 cursor-pointer shadow-lg border flex items-center justify-center"
-          onClick={() => {
-            AddPopup({
-              children: (
-                <>
-                  <Text>Name</Text>
-                  <input
-                    tabIndex={1}
-                    className="border text-center"
-                    id="newItem-name"
-                  />
-
-                  <Text>Initial quantity</Text>
-                  <input
-                    tabIndex={2}
-                    className="border text-center"
-                    id="newItem-qty"
-                    defaultValue={0}
-                    pattern="\d*"
-                  />
-                </>
-              ),
-              title: 'Add new item',
-              onAccept: (values) => {
-                const itemName = values['newItem-name'].trim();
-                const itemQty = parseInt(values['newItem-qty']);
-
-                const displayErrorPopup = () => {
-                  AddPopup({
-                    children: <>Either the name or the quantity are invalid.</>,
-                    showCancel: false,
-                  });
-                };
-
-                if (itemName.length === 0) {
-                  displayErrorPopup();
-                  return;
-                }
-
-                if (isNaN(itemQty)) {
-                  displayErrorPopup();
-                  return;
-                }
-
-                onAddItem(itemName, itemQty);
-              },
-            });
-          }}
-        >
-          <IoMdAdd />
-        </Button>
-        {isAiEnabled && (
-          <Button
-            replaceClassname={CleanClassnames(
-              `rounded-full bg-stone-300 w-8 h-8 cursor-pointer shadow-lg border flex items-center justify-center`
-            )}
-            onClick={() => {
-              navigate(
-                `/ai/inventory/imageanalysis?inventoryId=${inventoryId}`
-              );
-            }}
-          >
-            <PiStarFour />
-          </Button>
-        )}
-      </div>
-    </div>
-  );
 }
 
 export default InventoryDisplay;
