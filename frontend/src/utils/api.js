@@ -69,6 +69,14 @@ const inventory = {
       if (!res.ok) throw new Error(await res.text());
       return await res.json();
     }),
+  getInventory: async (id) =>
+    apiWrap(async () => {
+      const res = await fetch(`${environment.API_BASEURL}/inventory/${id}`, {
+        headers: { ...baseHeaders },
+      });
+      if (!res.ok) throw new Error(await res.text());
+      return await res.json();
+    }),
   updateItems: async (id, items) => {
     return apiWrap(async () => {
       const res = await fetch(`${environment.API_BASEURL}/inventory/${id}`, {
