@@ -19,6 +19,7 @@ export default [
     },
     rules: {
       'prettier/prettier': 'error',
+      'linebreak-style': ['error', 'windows'],
     },
   },
   {
