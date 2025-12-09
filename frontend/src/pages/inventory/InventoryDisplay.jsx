@@ -215,6 +215,8 @@ function InventoryDisplay() {
       setIsLoading(false);
     };
 
+    if (changeList.length === 0) return;
+
     const to = setTimeout(fn, updateChangesTimeout);
 
     return () => {
@@ -228,7 +230,10 @@ function InventoryDisplay() {
   } else {
     return (
       <div className="h-full">
-        <Header text={apiData?.header?.inventory_name ?? 'Items'} />
+        <Header
+          text={apiData?.header?.inventory_name ?? 'Items'}
+          onReturn={() => navigate('/inventory/list')}
+        />
         <section className="flex flex-col items-center gap-1">
           {apiData?.content
             .sort((a, b) => a.id - b.id)
