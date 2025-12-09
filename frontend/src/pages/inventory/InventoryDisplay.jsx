@@ -9,20 +9,10 @@ import { PiStarFour } from 'react-icons/pi';
 import api from '@/utils/api';
 import { IoMdAdd } from 'react-icons/io';
 import ItemEntry from './components/Items/ItemEntry';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { authClient } from '@/utils/auth';
-=======
-=======
->>>>>>> master
 import Header from '@/components/organisms/Header/Header';
 import LoadingScreen from '@/components/organisms/LoadingScreen';
 import getSession from '@/utils/hooks/getSession';
 import RoundedButton from '@/components/molecules/RoundedButton';
-<<<<<<< HEAD
->>>>>>> 90f1cbe (refactor: separated api and session, roundedbutton)
-=======
->>>>>>> master
 
 function InventoryDisplay() {
   const navigate = useNavigate();
@@ -34,23 +24,10 @@ function InventoryDisplay() {
 
   const inventoryId = searchParams.get('id');
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-  const refetchItems = async () => {
-    const items = await api.items.getList(inventoryId);
-    console.info({ items });
-    if (!items.success) {
-=======
-=======
->>>>>>> master
   // functions
   const refetchItems = async ({ onComplete } = {}) => {
     const result = await api.inventory.getInventory(inventoryId);
     if (!result.success) {
-<<<<<<< HEAD
->>>>>>> 90f1cbe (refactor: separated api and session, roundedbutton)
-=======
->>>>>>> master
       AddPopup({
         title: 'Failure',
         children: (
@@ -124,8 +101,6 @@ function InventoryDisplay() {
 
     setApiData((p) => ({ ...p, content: result.data }));
   };
-<<<<<<< HEAD
-=======
   const onItemRename = async (itemId, name) => {
     console.info({ itemId, name });
 
@@ -137,7 +112,6 @@ function InventoryDisplay() {
 
     refetchItems();
   };
->>>>>>> master
 
   // buttons
   const onAddItemButton = () => {
@@ -197,20 +171,7 @@ function InventoryDisplay() {
 
   // effects
   useEffect(() => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    setIsLoading(true);
-    refetchItems();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-=======
     // fetch session
->>>>>>> 90f1cbe (refactor: separated api and session, roundedbutton)
-=======
-    // fetch session
->>>>>>> master
     (async () => {
       getSession({
         onSession: () => setAiEnabled(true),
@@ -229,21 +190,6 @@ function InventoryDisplay() {
     return <LoadingScreen />;
   } else {
     return (
-<<<<<<< HEAD
-<<<<<<< HEAD
-      <div
-        className={CleanClassnames(`
-            relative
-            flex flex-col w-full h-full items-center
-            ${!isLoading ? '' : 'justify-center'}
-            `)}
-      >
-        <div className="w-24 h-24 flex items-center justify-center">
-          <AiOutlineLoading className="w-full h-full animate-spin" />
-        </div>
-=======
-=======
->>>>>>> master
       <div className="h-full">
         <Header text={apiData?.header?.inventory_name ?? 'Items'} />
         <section className="flex flex-col items-center gap-1">
@@ -270,10 +216,6 @@ function InventoryDisplay() {
             </RoundedButton>
           )}
         </footer>
-<<<<<<< HEAD
->>>>>>> 90f1cbe (refactor: separated api and session, roundedbutton)
-=======
->>>>>>> master
       </div>
     );
   }
