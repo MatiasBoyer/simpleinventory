@@ -11,6 +11,9 @@ import { IoMdAdd } from 'react-icons/io';
 import { useNavigate } from 'react-router';
 import { generateRandomDigitString } from '@/utils/random.js';
 import Header from '@/components/organisms/Header/Header';
+import LoadingScreen from '@/components/organisms/LoadingScreen';
+import RoundedButton from '@/components/molecules/RoundedButton';
+import ButtonFooter from '@/components/organisms/ButtonFooter';
 
 function Entry({ label, id, onDelete }) {
   const navigate = useNavigate();
@@ -157,6 +160,8 @@ function InventoryList() {
     });
   };
 
+  if (isLoading) return <LoadingScreen />;
+
   return (
     <>
       <div
@@ -167,11 +172,6 @@ function InventoryList() {
         `)}
       >
         <Header text="Inventory list" inventoryId={null} />
-        {isLoading && (
-          <div className="w-24 h-24 flex items-center justify-center">
-            <AiOutlineLoading className="w-full h-full animate-spin" />
-          </div>
-        )}
         {list.map((item) => (
           <Entry
             id={item.id}
@@ -182,20 +182,11 @@ function InventoryList() {
           />
         ))}
       </div>
-      <Button
-        replaceClassname={CleanClassnames(
-          `
-          absolute
-          bg-stone-100 shadow-sm opacity-60
-          bottom-10 left-1/2 -translate-x-1/2
-          border w-8 h-8 rounded-full cursor-pointer
-          flex items-center justify-center
-          `
-        )}
-        onClick={onCreate}
-      >
-        <IoMdAdd />
-      </Button>
+      <ButtonFooter>
+        <RoundedButton onClick={onCreate}>
+          <IoMdAdd />
+        </RoundedButton>
+      </ButtonFooter>
     </>
   );
 }

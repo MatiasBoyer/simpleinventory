@@ -2,6 +2,7 @@ import aiSchema from '#schemas/aiSchema.js';
 import compress from '#utils/imageCompress.js';
 import aiService from '#services/ai/aiService.js';
 import { analyzeImage } from '#services/ai/imageAnalysisService.js';
+import itemService from '#services/itemService.js';
 
 async function getImageAnalysis(req, res, next) {
   try {
@@ -18,10 +19,16 @@ async function getImageAnalysis(req, res, next) {
       compressed.push(await compress(ib64));
     }
 
+    const currentItemList = (
+      await itemService.getItems(value.inventoryId, req.user.id)
+    )?.flatMap((m) => m.item_text);
+
+    //console.info({ currentItemList });
+
     const aiResponse = await analyzeImage(
       value.imageBase64,
       value.language ?? req.user.language,
-      value.currentItemList ?? []
+      currentItemList ?? []
     );
 
     if (!aiResponse.success) {

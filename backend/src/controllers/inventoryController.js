@@ -1,5 +1,6 @@
 import schemas from '#schemas/inventorySchema.js';
 import service from '#services/inventoryService.js';
+import itemsService from '#services/itemService.js';
 
 async function createInventory(req, res, next) {
   try {
@@ -77,9 +78,39 @@ async function updateInventory(req, res, next) {
   }
 }
 
+async function getInventory(req, res, next) {
+  try {
+    const { error: paramsError, value: paramsValue } =
+      schemas.paramsSchema.validate(req.params);
+    if (paramsError) {
+      const err = new Error(paramsError);
+      err.status = 400;
+      throw err;
+    }
+
+    const inventory = (
+      await service.getInventory(req.user.id, paramsValue.inventoryId)
+    )?.[0];
+
+    if (!inventory) {
+      return res.status(404).json({ message: 'Not found' });
+    }
+
+    const items = await itemsService.getItems(
+      paramsValue.inventoryId,
+      req.user.id
+    );
+
+    res.status(200).json({ header: inventory, content: items });
+  } catch (err) {
+    next(err);
+  }
+}
+
 export default {
   createInventory,
   deleteInventory,
   updateInventory,
   getInventories,
+  getInventory,
 };
