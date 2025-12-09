@@ -47,8 +47,6 @@ async function updateInventory(inventoryId, ownerId, updates) {
   }
 
   if (updates?.items) {
-    console.info(updates.items);
-
     for (const item of updates.items) {
       const update = {
         id: item.id ?? null,
