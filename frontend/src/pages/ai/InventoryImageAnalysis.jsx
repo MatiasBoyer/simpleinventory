@@ -45,7 +45,7 @@ function CameraCapturer({
   const cameraHandler = useRef(null);
   const fileInputRef = useRef(null);
 
-  console.info({ canCapture });
+  //console.info({ canCapture });
 
   const onCompleteCapture = (base64 = null) => {
     setIsCapturing(false);
