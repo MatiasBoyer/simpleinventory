@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router';
 import { generateRandomDigitString } from '@/utils/random.js';
 import Header from '@/components/organisms/Header/Header';
 import LoadingScreen from '@/components/organisms/LoadingScreen';
+import RoundedButton from '@/components/molecules/RoundedButton';
 
 function Entry({ label, id, onDelete }) {
   const navigate = useNavigate();
@@ -180,20 +181,11 @@ function InventoryList() {
           />
         ))}
       </div>
-      <Button
-        replaceClassname={CleanClassnames(
-          `
-          absolute
-          bg-stone-100 shadow-sm opacity-60
-          bottom-10 left-1/2 -translate-x-1/2
-          border w-8 h-8 rounded-full cursor-pointer
-          flex items-center justify-center
-          `
-        )}
-        onClick={onCreate}
-      >
-        <IoMdAdd />
-      </Button>
+      <footer className="flex justify-center items-end absolute bottom-10 left-0 right-0 opacity-50 gap-3">
+        <RoundedButton onClick={onCreate}>
+          <IoMdAdd />
+        </RoundedButton>
+      </footer>
     </>
   );
 }
