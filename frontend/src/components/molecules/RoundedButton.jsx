@@ -1,10 +1,20 @@
+import CleanClassnames from '@/utils/functions/CleanClassnames';
 import Button from '../atoms/Button';
 
-function RoundedButton({ onClick, children }) {
+function RoundedButton({ onClick, children, disabled }) {
   return (
     <Button
-      replaceClassname="rounded-full bg-stone-300 w-8 h-8 cursor-pointer shadow-lg border flex items-center justify-center"
+      replaceClassname={CleanClassnames(
+        `
+        rounded-full
+        w-16 h-16
+        shadow-lg border
+        flex items-center justify-center
+        ${!disabled ? 'cursor-pointer bg-stone-300' : 'cursor-not-allowed bg-stone-500'}
+        `
+      )}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </Button>

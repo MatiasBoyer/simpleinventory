@@ -34,6 +34,8 @@ const Input = forwardRef(
       switch (type) {
         case 'number':
           v = parseInt(v);
+          if (maxLength && v > maxLength) v = maxLength;
+          if (minLength && v < minLength) v = minLength;
           break;
         default:
           break;
@@ -53,7 +55,9 @@ const Input = forwardRef(
         value={value}
         onChange={onChange}
         minLength={minLength}
+        min={minLength}
         maxLength={maxLength}
+        max={maxLength}
         disabled={disabled}
         id={id}
       />
