@@ -9,6 +9,8 @@ services:
     restart: unless-stopped
     env_file:
       - ./backend/.env
+    networks:
+      - npm-network
 
   frontend:
     build:
@@ -22,3 +24,10 @@ services:
     restart: unless-stopped
     env_file:
       - ./frontend/.env
+    networks:
+      - npm-network
+
+networks:
+  npm-network:
+    name: npm-network
+    external: true
