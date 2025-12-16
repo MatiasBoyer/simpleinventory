@@ -172,15 +172,19 @@ function InventoryList() {
         `)}
       >
         <Header text="Inventory list" inventoryId={null} />
-        {list.map((item) => (
-          <Entry
-            id={item.id}
-            key={item.id}
-            label={item.inventory_name}
-            quantity={item.item_count}
-            onDelete={() => onDelete(item.id)}
-          />
-        ))}
+        <section className="w-full flex-1 min-h-0 overflow-hidden">
+          <div className="h-full flex flex-col items-center gap-1 overflow-y-auto px-2 py-2">
+            {list.map((item) => (
+              <Entry
+                id={item.id}
+                key={item.id}
+                label={item.inventory_name}
+                quantity={item.item_count}
+                onDelete={() => onDelete(item.id)}
+              />
+            ))}
+          </div>
+        </section>
       </div>
       <ButtonFooter>
         <RoundedButton onClick={onCreate}>

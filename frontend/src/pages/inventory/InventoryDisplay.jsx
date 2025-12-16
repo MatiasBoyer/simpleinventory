@@ -11,8 +11,18 @@ import LoadingScreen from '@/components/organisms/LoadingScreen';
 import getSession from '@/utils/hooks/getSession';
 import RoundedButton from '@/components/molecules/RoundedButton';
 import ButtonFooter from '@/components/organisms/ButtonFooter';
+import Input from '@/components/atoms/Input';
 
 const updateChangesTimeout = 2000;
+
+function Searchbar() {
+  return (
+    <div className="w-full p-2 grid grid-cols-[auto_1fr] border-b flex flex-row justify-between items-center">
+      <Text className="pr-2">Search</Text>
+      <Input />
+    </div>
+  );
+}
 
 function InventoryDisplay() {
   const navigate = useNavigate();
@@ -230,24 +240,27 @@ function InventoryDisplay() {
     return <LoadingScreen />;
   } else {
     return (
-      <div className="h-full">
+      <div className="h-full flex flex-col">
         <Header
           text={apiData?.header?.inventory_name ?? 'Items'}
           onReturn={() => navigate('/inventory/list')}
         />
-        <section className="flex flex-col items-center gap-1">
-          {apiData?.content
-            .sort((a, b) => a.id - b.id)
-            .map((item) => (
-              <ItemEntry
-                item={item}
-                key={item.id}
-                onRemoveItem={onRemoveItem}
-                onSumItem={onSetItemQty}
-                onSetItemQty={onSetItemQty}
-                onItemRename={(newName) => onItemRename(item.id, newName)}
-              />
-            ))}
+        <Searchbar />
+        <section className="flex-1 min-h-0 overflow-hidden">
+          <div className="h-full flex flex-col items-center gap-1 overflow-y-auto px-2 py-2">
+            {apiData?.content
+              .sort((a, b) => a.id - b.id)
+              .map((item) => (
+                <ItemEntry
+                  item={item}
+                  key={item.id}
+                  onRemoveItem={onRemoveItem}
+                  onSumItem={onSetItemQty}
+                  onSetItemQty={onSetItemQty}
+                  onItemRename={(newName) => onItemRename(item.id, newName)}
+                />
+              ))}
+          </div>
         </section>
         <ButtonFooter>
           <RoundedButton onClick={onAddItemButton}>
