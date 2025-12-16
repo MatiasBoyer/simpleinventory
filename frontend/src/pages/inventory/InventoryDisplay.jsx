@@ -12,14 +12,15 @@ import getSession from '@/utils/hooks/getSession';
 import RoundedButton from '@/components/molecules/RoundedButton';
 import ButtonFooter from '@/components/organisms/ButtonFooter';
 import Input from '@/components/atoms/Input';
+import fuzzysort from 'fuzzysort';
 
 const updateChangesTimeout = 2000;
 
-function Searchbar() {
+function Searchbar({ onSearchChange }) {
   return (
     <div className="w-full p-2 grid grid-cols-[auto_1fr] border-b flex flex-row justify-between items-center">
       <Text className="pr-2">Search</Text>
-      <Input />
+      <Input onValueChange={onSearchChange} />
     </div>
   );
 }
@@ -32,6 +33,7 @@ function InventoryDisplay() {
   const [isAiEnabled, setAiEnabled] = useState(false);
   const [changeList, setChangeList] = useState([]);
   const [apiData, setApiData] = useState(null);
+  const [searchText, setSearchText] = useState('');
 
   const inventoryId = searchParams.get('id');
 
@@ -245,12 +247,22 @@ function InventoryDisplay() {
           text={apiData?.header?.inventory_name ?? 'Items'}
           onReturn={() => navigate('/inventory/list')}
         />
-        <Searchbar />
+        <Searchbar onSearchChange={setSearchText} />
         <section className="flex-1 min-h-0 overflow-hidden">
           <div className="h-full flex flex-col items-center gap-1 overflow-y-auto px-2 py-2">
-            {apiData?.content
-              .sort((a, b) => a.id - b.id)
-              .map((item) => (
+            {(() => {
+              const sorted = apiData?.content?.sort((a, b) => a.id - b.id);
+
+              if (!sorted) return <></>;
+
+              const results =
+                searchText.length > 0
+                  ? fuzzysort
+                      .go(searchText, sorted, { key: 'item_text' })
+                      .map((r) => r.obj)
+                  : sorted;
+
+              return results.map((item) => (
                 <ItemEntry
                   item={item}
                   key={item.id}
@@ -259,7 +271,8 @@ function InventoryDisplay() {
                   onSetItemQty={onSetItemQty}
                   onItemRename={(newName) => onItemRename(item.id, newName)}
                 />
-              ))}
+              ));
+            })()}
           </div>
         </section>
         <ButtonFooter>
