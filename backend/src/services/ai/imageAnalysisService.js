@@ -15,7 +15,7 @@ const b64regex = /^data:([^;]+);base64,(.+)$/;
  * - `data` {Object|Array}: The parsed JSON response from the AI client if successful, otherwise an empty array.
  */
 async function analyzeImage(base64, language = 'english', currentList = []) {
-  const prompt = GetImageAnalysisPrompt(language, currentList);
+  const prompt = await GetImageAnalysisPrompt(language, currentList);
   const aiClient = GetAIClient();
 
   let attachments = [];
